@@ -1,0 +1,196 @@
+#!/usr/bin/perl 
+# Calculate individual Flux Statistics for a grid based model with CSV data
+# Jonathan Leto <jleto@mail.ucf.edu> Wed Sep 19 05:14:40 EDT 2007 
+# Assumptions
+#	- Grid elements are square 4x4 
+#	- Top left is origin
+#	- Read in Text CSV file from first argument and output flux statistics in CSV 
+#	- Ignore csv data which is outside of prescribed grid
+#	- Fields:  realTime,simTime,stepNum,individualID,diameter,x,y,velocityX,velocityY,
+# 			orientation,pathID,wayPointX,wayPointY,groupID,initialVel,color,paths,model
+#########  Necessary Libraries and such
+use lib qw( /home/jleto/perl/lib/perl5/site_perl/5.8.8/ );
+use Text::CSV;
+use Set::Scalar;
+use strict;
+######### User Configurable Settings
+my $gridSize = 5;
+my ($gridCols,$gridRows) = (10,8);
+###############################
+my %individuals;
+my %individualsInCell = ();
+#### BEGIN CODE
+my $debug = 1;
+my $file = shift || die "Please give the data file as an argument on the command line";
+my $logfile = "$file.log";
+my $statfile = shift || "$file.stats";
+my %flux = ( );
+my @simTimes;
+my @CSV;
+
+my $csv = Text::CSV->new();
+open (CSV, "<", $file) or die $!;	# read the CSV file
+open (LOG, ">", $logfile) or die $!;	# overwrite the logfile
+open (STATS,">", $statfile) or die $!;	# overwrite the statfile
+
+while ( <CSV> ) {
+	push @CSV,$_;
+	last if m/,{5,}/;	# end if we see at least five commas in a row, this usually means empty lines
+	if ($csv->parse($_)) {
+		# readability instead of column numbers
+		my ( $realTime,$simTime,$stepNum,$individualID,$diameter,
+			$x,$y,$velocityX,$velocityY,$orientation,$pathID,
+			$wayPointX,$wayPointY,$groupID,$initialVel,$color,$paths,$model ) 
+		 = $csv->fields();
+		my $output = "$simTime,$individualID,$x,$y";
+		next unless $simTime; # ignore lines with no simTime
+		# keep track of how many indivuals we have
+		$individuals{ $individualID } = 1;
+		my $gridCell = getCellNumber($x,$y);
+		# this is a hash of hashes which point to an array of the individuals existing in a grid cell at
+		# the given simTime
+		# this is the intermediate data from which the flux stats will be created
+		push @{ $individualsInCell{ $simTime }{$gridCell } }, $individualID;
+		push @simTimes, $simTime;
+
+		print "$output, $gridCell\n" if $debug;
+		# next, find the next simTime that this individual exists at
+		# and see if the cell has changed
+	} else {
+		my $err = $csv->error_input;
+		print "Failed to parse line: $err";
+	}
+}
+
+my ($cell, $simTime);
+# print out the full monty if debugging is on
+if ($debug) {
+	foreach  $simTime ( sort keys %individualsInCell ) {
+		print "$simTime: { ";
+		foreach $cell ( sort keys %{ $individualsInCell{$simTime} } ) {
+			print "$cell= ";
+			my $indiv;
+			foreach $indiv ( @{ $individualsInCell{$simTime}{$cell} } ) {
+				print "$indiv,";
+			}
+			print "\n";
+		}
+		print "}\n";
+	}
+}
+
+print LOG "Total Individuals: ".  scalar (keys %individuals) . "\n";
+
+foreach  $simTime ( sort keys %individualsInCell ) {
+	# if a cell never shows up in the data, it's flux will not be calculated
+	foreach $cell ( sort keys %{ $individualsInCell{$simTime} } ) {
+		#print "sT=$simTime,c=$cell\n";
+		printFluxStats($simTime,$cell) if ( $cell > 0 );
+	}
+}
+
+# given a simTime and gridcell, calculate fluxes since previous simTime
+sub countFlux {
+	my ($tc,$cell) = @_;
+	my $empty = Set::Scalar->new();
+	my $tp = getPrevSimTime( $simTime );
+	my %flux = ( north => "", south => "", east => "", west => "" );
+	my %prev = ();	# data at previous simTime
+	my %cur  = ();	# data at current simTime
+
+        %prev = ( 	  cell => Set::Scalar->new($individualsInCell{$tp}{$cell}),
+			  north=> Set::Scalar->new($individualsInCell{$tp}{$cell-$gridCols}),
+                          south=> Set::Scalar->new($individualsInCell{$tp}{$cell+$gridCols}),
+                          east => Set::Scalar->new($individualsInCell{$tp}{$cell+1}),
+                          west => Set::Scalar->new($individualsInCell{$tp}{$cell-1} ) );
+
+        %cur = ( 	  
+			  cell => Set::Scalar->new($individualsInCell{$tc}{$cell}),
+			  north=> Set::Scalar->new($individualsInCell{$tc}{$cell-$gridCols}),
+                          south=> Set::Scalar->new($individualsInCell{$tc}{$cell+$gridCols}),
+                          east => Set::Scalar->new($individualsInCell{$tc}{$cell+1}),
+                          west => Set::Scalar->new($individualsInCell{$tc}{$cell-1}) );
+  
+	if( is_boundary_cell($cell) ){
+			if( $cell % $gridCols == 1 ){ # first col
+				$prev{west} = $cur{west} = $empty;
+			} 
+			if( $cell % $gridCols == 0 ){ # last col
+				$prev{east} = $cur{west} = $empty;			
+			}
+			if ($cell < $gridCols ){ # first row
+				$prev{north} = $cur{north} = $empty;
+			} 
+			if( $cell+$gridCols > $gridCols*$gridRows ){ # last row
+				$prev{south} = $cur{south} = $empty;
+			}
+	} 
+	# the * is overloaded to set intersection for objects of Set::Scalar
+	# standard convention: plus = out, minus = in
+	$flux{north} = ($prev{cell} * $cur{north})->size - ($cur{cell} * $prev{north})->size;
+	$flux{south} = ($prev{cell} * $cur{south})->size - ($cur{cell} * $prev{south})->size;
+	$flux{east}  = ($prev{cell} * $cur{east} )->size - ($cur{cell} * $prev{east} )->size;
+	$flux{west}  = ($prev{cell} * $cur{west} )->size - ($cur{cell} * $prev{west} )->size;
+
+	return ($flux{north},$flux{east},$flux{south},$flux{west});
+}
+# return true/false if cell is on the boundary of the grid
+sub is_boundary_cell {
+	my $cell = shift;
+	return 1 if ($cell % $gridCols == 0 || $cell % $gridCols == 1 || $cell < $gridCols || ($cell+$gridCols) > $gridRows*$gridCols );
+	return 0;
+}
+
+# return the fluxes in each cardinal direction for a given simtime and gridcell
+sub printFluxStats {
+	my ($t2,$gridCell) = (shift,shift);
+	my $t1 = getPrevSimTime($t2);
+	my $group1 = Set::Scalar->new( @{ $individualsInCell{$t1}{$gridCell} } );
+	my $group2 = Set::Scalar->new( @{ $individualsInCell{$t2}{$gridCell} } );
+	if( $group1 == $group2 ) {
+		# no flux, since all group members are the same in this cell since last simTime
+		print STATS "$t2,$gridCell,0,0,0,0," . $group1->size . "\n";
+	} else {
+		# count the fluxes in each direction
+		my ($fluxNorth,$fluxEast,$fluxSouth,$fluxWest) = countFlux( $t2, $gridCell );
+		# print out CSV line of flux data
+		print STATS "$t2,$gridCell,$fluxWest,$fluxNorth,$fluxEast,$fluxSouth," . $group2->size ."\n";
+	}
+}
+# return simtime immediately before 
+sub getPrevSimTime {
+	my $simTime = shift;
+	my $k;
+	# if there is no previous simTime, return what we were given, so that a flux of all 0's will be calculated
+	return -1 unless $simTime;
+	if( $simTime == $simTimes[0] ){
+		return $simTime;
+	}
+
+	for($k=1;$k<=$#simTimes;$k++) {
+		#print "k=$k\n";
+		if ($simTimes[$k] == $simTime ){
+			return $simTimes[$k-1];
+		}
+	}
+	# no such simTime!
+	return -1;
+}
+# given x,y coords return the cell number 
+sub getCellNumber {
+	my $x = shift;
+	my $y = shift;
+	my ($k,$j);
+	for( $k=1; $k <= $gridCols; $k++ ){	
+		if ( $x - $gridSize * $k < 0) { # it is in the k-th column
+			for(  $j=1; $j <= $gridRows; $j++){
+				print "checking ($j,$k)\n" if ($debug>1);
+				if( $y - $gridSize * $j < 0){ # it is in the j-th row
+					return $gridSize *($k-1) + $j;		# turn grid(x,y) into grid 1,2,...,12,...
+				}
+			}
+		}
+	}
+	print LOG "Ignoring individual at ($x,$y) which is outside of prescribed grid\n" if $debug;
+	return -1;
+}

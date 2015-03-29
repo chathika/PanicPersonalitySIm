@@ -1,0 +1,47 @@
+<?xml version="1.0"?>
+
+<configuration xmlns="http://tempuri.org/config.xsd">
+  <log type="SystemLog" fileName="../logs/sysLog.txt" logLevel="1" consoleOutput="true" fileOutput="false"/>
+  <log type="DataLogger" fileName="../logs/dataLog.csv" fileOutput="true"/>
+  <world height="45" width="35" scale="18" discretization="100"/>
+<!--  <terminate time="10"/> -->
+  <obstacles>
+    <obstacle type="Rectangular" force="1" location="1 5" width="12.3" height="1" angle="0" displayCenter="true"/>
+	<obstacle type="Rectangular" force="1" location="15.7 5" width="12.3" height="1" angle="0" displayCenter="true"/>
+	<obstacle type="Rectangular" force="1" location="1 6" width="1" height="25" angle="0" displayCenter="true"/>
+	<obstacle type="Rectangular" force="1" location="27 6" width="1" height="25" angle="0" displayCenter="true"/>
+	<obstacle type="Rectangular" force="1" location="1 31" width="27" height="1" angle="0" displayCenter="true"/>
+	
+	<obstacle type="Rectangular" force="1" location="12 9" width="12" height="3" angle="0" displayCenter="true"/>
+  </obstacles>
+  <paths>
+  	<path id="1" name="path1">
+  		<waypoint x="17.5" y="9.5" radius="0.25"/>
+  		<waypoint x="20" y="9.5" radius="0.25"/>
+  		<waypoint x="25" y="9.5" radius="0.25"/>
+  	</path>
+  </paths>
+  <randomGenerators>
+  	<generator id="1" type="normal" mean="0.6" stdDev="0.1"/>	
+  </randomGenerators>
+  <model type="HMFVRayTracerModel" initialVelocity="1.5" rayTraceMethod="CentroidWithAxialRayTraceMethod" toggle="0">
+        <individuals number="5" diameter="genID=1" color="10 180 10">
+ 	    	<paths>
+ 	    		<path id="1" weight="2"/>
+  	    	</paths>
+	    	<region>
+	    		<obstacle type="Rectangular" location="4 4" width="8" height="13" angle="0" />
+	    	</region>
+	    </individuals>
+  </model>
+  <model type="HMFVRayTracerModel" initialVelocity="1.5" rayTraceMethod="CentroidWithAxialRayTraceMethod" toggle="1">
+        <individuals number="5" diameter="genID=1" color="10 180 10">
+ 	    	<paths>
+ 	    		<path id="1" weight="2"/>
+  	    	</paths>
+	    	<region>
+	    		<obstacle type="Rectangular" location="4 4" width="8" height="13" angle="0" />
+	    	</region>
+	    </individuals>
+  </model>
+</configuration>

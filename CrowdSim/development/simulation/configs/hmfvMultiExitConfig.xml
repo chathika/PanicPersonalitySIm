@@ -1,0 +1,90 @@
+<?xml version="1.0"?>
+<!--
+This is a config file used to setup a multi exit room configuration
+using the HMFV model.
+-->
+<configuration xmlns="http://tempuri.org/config.xsd">
+  <log type="SystemLog" fileName="../logs/sysLog.txt" logLevel="1" consoleOutput="true" fileOutput="false"/>
+  <log type="DataLogger" fileName="../logs/dataLog.csv" fileOutput="true"/>
+  <world width="50" height="40" scale="14" discretization="100"/>
+  <terminate time="20"/>
+  <movie filename="../logs/" />
+  <obstacles>
+  	<!-- Front Exit -->
+  	<obstacle type="Rectangular" force="1" location="7 9" width="15" height="1" angle="0"/>
+  	<obstacle type="Rectangular" force="1" location="28 9" width="15" height="1" angle="0"/>
+  	<obstacle type="Rectangular" force="1" location="21 5" width="1" height="4" angle="0"/>
+  	<obstacle type="Rectangular" force="1" location="28 5" width="1" height="4" angle="0"/>
+  	<obstacle type="Rectangular" force="1" location="21 4" width="3" height="1" angle="0"/>
+  	<obstacle type="Rectangular" force="1" location="26 4" width="3" height="1" angle="0"/>
+  	<!-- Left Angled Wall -->
+  	<obstacle type="Rectangular" force="1" location="4.738 13.67" width="1" height="5" angle="216.887"/>
+  	<!-- Right Angled Wall -->
+  	<obstacle type="Rectangular" force="1" location="46 13" width="1" height="5" angle="143.13"/>
+  	<!-- Back Exit -->
+  	<obstacle type="Rectangular" force="1" location="4 35" width="8.5" height="1" angle="0"/>
+  	<obstacle type="Rectangular" force="1" location="14 35" width="22" height="1" angle="0"/>
+  	<obstacle type="Rectangular" force="1" location="37.5 35" width="8.5" height="1" angle="0"/>
+  	<!-- Left Exit -->
+  	<obstacle type="Rectangular" force="1" location="4 13" width="1" height="10.5" angle="0"/>
+  	<obstacle type="Rectangular" force="1" location="4 25" width="1" height="10" angle="0"/>
+  	<!-- Right Exit -->
+  	<obstacle type="Rectangular" force="1" location="45 13" width="1" height="10.5" angle="0"/>
+  	<obstacle type="Rectangular" force="1" location="45 25" width="1" height="10" angle="0"/>
+  	<!-- Columns -->
+  	<!--<obstacle type="Circular" force="1" center="25 19" radius="1" displayCenter="true" />-->
+  	<obstacle type="Circular" force="1" center="17 19" radius="1.5" />
+  	<obstacle type="Circular" force="1" center="33 19" radius="1.5" />
+  </obstacles>
+  <paths>
+  	<path id="1" name="path1">
+  		<waypoint x="25" y="4" radius="0.5"/>
+  		<waypoint x="25" y="1" radius="0.5"/>
+  	</path>
+  	<path id="2" name="path2">
+  		<waypoint x="5" y="24" radius="0.5"/>
+  		<waypoint x="1" y="24" radius="0.5"/>
+  	</path>
+  	<path id="3" name="path3">
+  		<waypoint x="45" y="24" radius="0.5"/>
+  		<waypoint x="49" y="24" radius="0.5"/>
+  	</path>
+  	<path id="4" name="path4">
+  		<waypoint x="13" y="36" radius="0.5"/>
+  		<waypoint x="13" y="40" radius="0.5"/>
+  	</path>
+  	<path id="5" name="path5">
+  		<waypoint x="37" y="36" radius="0.5"/>
+  		<waypoint x="37" y="40" radius="0.5"/>
+  	</path>
+  </paths>
+  <randomGenerators>
+  	<generator id="1" type="normal" mean="0.6" stdDev="0.05"/>	
+  </randomGenerators>
+  <model type="HMFVModel" c="10">
+	    <individuals number="30" diameter="genID=1" groups="3" groupSize="4" color="10 180 10">
+ 	    	<paths>
+ 	    		<path id="1" weight="1"/>
+ 	    		<path id="2" weight="1"/>
+ 	    		<path id="3" weight="1"/>
+ 	    		<path id="4" weight="1"/>
+ 	    		<path id="5" weight="1"/>
+ 	    	</paths>
+ 	    	<region>
+ 	    		<obstacle type="Rectangular" location="7 15" width="30" height="18" angle="0" />
+	    	</region>
+ 	    </individuals>
+ 	    <individuals number="30" diameter="genID=1" groups="4" groupSize="3" color="180 10 10">
+ 	    	<paths>
+ 	    		<path id="1" weight="1"/>
+ 	    		<path id="2" weight="1"/>
+ 	    		<path id="3" weight="1"/>
+ 	    		<path id="4" weight="1"/>
+ 	    		<path id="5" weight="1"/>
+ 	    	</paths>
+ 	    	<region>
+ 	    		<obstacle type="Rectangular" location="7 15" width="30" height="18" angle="0" />
+	    	</region>
+ 	    </individuals>
+  </model>
+</configuration>

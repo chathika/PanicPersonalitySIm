@@ -1,0 +1,40 @@
+<?xml version="1.0"?>
+
+<configuration xmlns="http://tempuri.org/config.xsd">
+  <log type="SystemLog" fileName="../logs/sysLog.txt" logLevel="1" consoleOutput="true" fileOutput="false"/>
+  <log type="DataLogger" fileName="../logs/dataLog.csv" fileOutput="true"/>
+  <world height="30" width="30" scale="18" discretization="100"/>
+  <obstacles>
+    <obstacle type="Rectangular" force="1" location="1 1" width="1" height="17" angle="0"/>
+	<obstacle type="Rectangular" force="1" location="2 17" width="15" height="1" angle="0"/>
+	<obstacle type="Rectangular" force="1" location="2 1" width="15" height="1" angle="0"/>
+	<obstacle type="Rectangular" force="1" location="17 1" width="1" height="7.9" angle="0"/>
+	<obstacle type="Rectangular" force="1" location="12.1 2" width="1" height="8.45" angle="35"/>
+	<obstacle type="Rectangular" force="1" location="17 10.1" width="1" height="7.9" angle="0"/>
+	<obstacle type="Rectangular" force="1" location="17 10.1" width="1" height="8.45" angle="-35"/>
+  	<obstacle type="Circular" force="1" center="17 8.9" radius="0.01"  />
+  	<obstacle type="Circular" force="1" center="18 8.9" radius="0.01" />
+  	<obstacle type="Circular" force="1" center="17 10.1" radius="0.01" />
+  	<obstacle type="Circular" force="1" center="18 10.1" radius="0.01" />
+  </obstacles>
+  <paths>
+  	<path id="1" name="path1">
+  		<waypoint x="18" y="9" radius="0.25"/>
+  		<waypoint x="20" y="9" radius="0.25"/>
+  		<waypoint x="25" y="9" radius="0.25"/>
+  	</path>
+  </paths>
+  <randomGenerators>
+  	<generator id="1" type="normal" mean="0.6" stdDev="0.1"/>	
+  </randomGenerators>
+  <model type="hmfvModel">
+	    <individuals number="10" diameter="genID=1" violenceRating="0" color="10 180 10">
+	    	<paths>
+	    		<path id="1" weight="1"/>
+	    	</paths>
+	    	<region>
+	    		<obstacle type="Rectangular" location="4 4" width="8" height="13" angle="0" />
+	    	</region>
+	    </individuals>
+  </model>
+</configuration>

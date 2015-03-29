@@ -1,0 +1,43 @@
+<?xml version="1.0"?>
+
+<configuration xmlns="http://tempuri.org/config.xsd">
+<!-- <log type="SystemLog" fileName="../logs/sysLog.csv" logLevel="1" consoleOutput="true"  fileOutput="true"/>-->
+<log type="DataLogger" fileName="../logs/dataLog.csv" fileOutput="true"/>
+<world height="30" width="30" scale="18" discretization="100"/>
+<!--<movie filenname = "../logs/" />-->
+  <terminate time="100"/>
+  <obstacles>
+    <obstacle type="Rectangular" force="2" location="1 1" width="1" height="14" angle="0" displayCenter="true"/>
+	<obstacle type="Rectangular" force="2" location="2 14" width="15" height="1" angle="0" displayCenter="true"/>
+	<obstacle type="Rectangular" force="2" location="2 1" width="15" height="1" angle="0" displayCenter="true"/>
+	<obstacle type="Rectangular" force="2" location="17 1" width="1" height="6.5" angle="0" displayCenter="true"/>
+	<obstacle type="Rectangular" force="2" location="17 8.5" width="1" height="6.5" angle="0" displayCenter="true"/>
+  
+  	
+  	<obstacle type="Circular" force="2" center="17 7.5" radius="0.01"/>
+  	<obstacle type="Circular" force="2" center="18 7.5" radius="0.01"/>
+  	<obstacle type="Circular" force="2" center="17 8.5" radius="0.01"/>
+  	<obstacle type="Circular" force="2" center="18 8.5" radius="0.01"/>
+  	<!--<obstacle type="Circular" force="1" center="14 8" radius="1" displayCenter="true" />-->
+  </obstacles>
+  <paths>
+  	<path id="1" name="path1">
+  		<waypoint x="17.5" y="8" radius="0.25"/>
+  		<waypoint x="20" y="8" radius="0.25"/>
+  		<waypoint x="25" y="8" radius="0.25"/>
+  	</path>
+  </paths>
+  <randomGenerators>
+  	<generator id="1" type="normal" mean="0.6" stdDev="0.1"/>	
+  </randomGenerators>
+  <model type="LKFModel2">
+	    <individuals number="100" diameter="genID=1" color="0 200 0" initialVelocity = "1.5">
+	    	<paths>
+	    		<path id="1" weight="1"/>
+	    	</paths>
+	    	<region>
+	    		<obstacle type="Rectangular" location="2 2" width="8" height="12" angle="0"/>
+	    	</region>
+	    </individuals>	    
+  </model>
+</configuration>

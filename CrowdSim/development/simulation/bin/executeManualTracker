@@ -1,0 +1,3 @@
+#!/bin/bash
+H=`pwd`/..
+cd $H && java -cp $H/classes:$H/libs/mason11.jar:$h/libs/jmf.jar:$CLASSPATH manualTracker.TrackerApplication $*

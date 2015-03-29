@@ -1,0 +1,4 @@
+#
+cd ../src
+$JDK_HOME/bin/javadoc -private -version -author -d ../docs/classdocs/ -sourcepath . -subpackages crowdsimulation
+cd ../bin

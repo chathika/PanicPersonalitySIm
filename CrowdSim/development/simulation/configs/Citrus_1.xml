@@ -1,0 +1,59 @@
+<?xml version="1.0"?>
+
+<configuration xmlns="http://tempuri.org/config.xsd">
+  <log type="SystemLog" fileName="../logs/sysLog.txt" logLevel="1" consoleOutput="true" fileOutput="false"/>
+  <log type="DataLogger" fileName="../logs/dataLog.csv" fileOutput="true"/>
+  <world width="17" height="9" scale="14" discretization="100"/>
+  <obstacles>
+  	<!-- Left Fence-->
+  	<obstacle type="Rectangular" force="1" location="0 4.0" width="6.7" height=".075" angle="0"/>
+  	<!-- Left Fence Gate-->
+	<obstacle type="Rectangular" force="1" location="6.625 4.0" width="3.73" height=".075" angle="90"/>
+  	<!-- Right Fence-->
+	<obstacle type="Rectangular" force="1" location="14.16 4.0" width="2.84" height=".075" angle="0"/>
+  	<!-- Right Fence Gate-->
+	<obstacle type="Rectangular" force="1" location="14.16 4.1" width="3.73" height=".075" angle="185"/>
+  	<!--turnstile - 1-->
+	<obstacle type="Rectangular" force="1" location="1.8667 5.5" width=".3048" height=".6985" angle="0"/>
+  	<!--turnstile - 2-->
+	<obstacle type="Rectangular" force="1" location="3.124 5.5" width=".3048" height=".6985" angle="0"/>
+  	<!--turnstile - 3-->
+	<obstacle type="Rectangular" force="1" location="4.2107 5.5" width=".3048" height=".6985" angle="0"/>
+  	<!--turnstile - 4-->
+	<obstacle type="Rectangular" force="1" location="5.468 5.5" width=".3048" height=".6985" angle="0"/>
+  	<!--turnstile bar 1-->
+	<obstacle type="Rectangular" force="1" location="1.9691 5.5" width=".889" height=".1" angle="90"/>
+	<!--turnstile bar 2-->
+	<obstacle type="Rectangular" force="1" location="3.2264 5.5" width=".889" height=".1" angle="90"/>
+  	<!--turnstile bar 3-->
+	<obstacle type="Rectangular" force="1" location="4.31225 5.5" width=".889" height=".1" angle="90"/>
+  	<!--turnstile bar crossbar-->
+	<obstacle type="Rectangular" force="1" location="3.2264 4.611" width="1.08585" height=".1" angle="0"/>
+  	<!--turnstile bar 4-->
+	<obstacle type="Rectangular" force="1" location="5.56955 5.5" width=".889" height=".1" angle="90"/>
+  	<!--trashcan-->
+	<obstacle type="Circular" force="1" center="10.43 5.0" radius=".3" />
+  	<!--check
+	<obstacle type="Rectangular" force="1" location="5 70" width="160" height="20" angle="0"/>-->
+  </obstacles>
+  <paths>
+  	<path id="1" name="path1">
+  		<waypoint x="12.43" y="4.0" radius=".5"/>
+  		<waypoint x="12.43" y="3.0" radius=".5"/>
+  		<waypoint x="12.43" y="2.0" radius=".5"/>
+  	</path>
+  </paths>
+  <randomGenerators>
+  	<generator id="1" type="normal" mean="0.6" stdDev="0.05"/>	
+  </randomGenerators>
+  <model type="HMFVModel">
+	    <individuals number="30" diameter="genID=1" violenceRating="0" color="10 180 10">
+ 	    	<paths>
+ 	    		<path id="1" weight="1"/>
+  	    	</paths>
+  	    	<region>
+  	    		<obstacle type="Rectangular" force="1" location=".5 7.0" width="16.0" height="2.0" angle="0"/>
+  	    	</region>
+ 	    </individuals>
+  </model>
+</configuration>

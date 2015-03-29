@@ -1,0 +1,86 @@
+<configuration xmlns="http://tempuri.org/config.xsd">
+  <log type="SystemLog" fileName="sysLog.txt" logLevel="1" consoleOutput="true" fileOutput="false"/>
+  <log type="DataLogger" fileName="dataLog.csv" fileOutput="true"/>
+  <world width="20" height="20" scale="32" discretization="100"/>
+  <terminate time="180"/>
+  <obstacles>
+  	<!-- Left Fence-->
+  	<obstacle type="Rectangular" force="1" location="0 9" width="8" height=".3" angle="0"/>
+	<!-- Right Fence-->
+	<obstacle type="Rectangular" force="1" location="15.4549 9" width="4.5451" height=".3" angle="0"/>
+        <!-- Left Fence Gate-->
+  	<obstacle type="Rectangular" force="1" location="7.7 9" width="3.72745" height=".3" angle="257"/>
+        <!-- Right Fence Gate-->
+  	<obstacle type="Rectangular" force="1" location="15.4549 9" width="3.72745" height=".3" angle="257"/>
+        <!-- Left Turnstyles-->
+  	<obstacle type="Rectangular" force="1" location="2.9962 9.8" width="3.7719" height=".6985" angle="0"/>
+        <!-- Right Turnstyles-->
+  	<obstacle type="Rectangular" force="1" location="16.6487 9.8" width="3.7719" height=".6985" angle="0"/>
+ 
+  	<obstacle type="Circular" force="1" center="2.3358 3.2088" radius=".2747" />
+        <!--Right Tree-->
+  	<obstacle type="Circular" force="1" center="14.5278 3.2088" radius=".2747" /> 
+  </obstacles>
+  <paths>
+  	<path id="1" name="path1"><!-- Left to left -->
+  		<waypoint x="9.263725" y="9" radius="1"/>
+  		<waypoint x="9.363725" y="5.5" radius="1"/>
+  		<waypoint x="7.5" y="0" radius="1"/>
+  	</path>3
+  	<path id="3" name="path3"><!-- Right to right -->
+    		<waypoint x="11.72745" y="9" radius="1"/>
+  		<waypoint x="11.72745" y="5.5" radius="1"/>
+  		<waypoint x="11.72745" y="0" radius="1"/>
+  	</path>
+        <path id="2" name="path2"><!-- Right to right -->
+    		<waypoint x="13.591175" y="9" radius="1"/>
+  		<waypoint x="14" y="5.5" radius="1"/>
+  		<waypoint x="15" y="0" radius="1"/>
+  	</path>
+  </paths>
+  <randomGenerators>
+  	<generator id="1" type="normal" mean="0.35" stdDev="0.07"/>
+  	<generator id="2" type="exponentialWithMean" mean="1.2"/>
+  	<generator id="3" type="exponentialWithMean" mean="2.5"/>
+  </randomGenerators>
+  <model type="cellularautomata.FloorFieldCAModel">
+
+
+ 	    <individuals number="3" diameter="genID=1" time="genID=2" color="10 180 10" initialVelocity="1.5">
+ 	    	<paths>
+ 	    		<path id="1" weight=".8"/>
+ 	    		<!--<path id="2" weight=".2"/>-->
+  	    	</paths>
+  	    	<region>
+  	    		<obstacle type="Rectangular" force="1" location="0 16" width="5" height="2" angle="0"/>
+  	    	</region>
+ 	    </individuals>  	
+ 	   <individuals number="3" diameter="genID=1" time="genID=2" color="180 10 10" initialVelocity="1.5">
+ 	    	<paths>
+ 	    		<path id="3" weight=".8"/>
+  	    	</paths>
+  	    	<region>
+  	    		<obstacle type="Rectangular" force="1" location="0 16" width="5" height="2" angle="0"/>
+  	    	</region>
+ 	    </individuals>  	
+ 	    <individuals number="3" diameter="genID=1" time="genID=3" color="10 10 180" initialVelocity="1.5">
+ 	    	<paths>
+ 	    		<path id="2" weight="1"/>
+ 	    		
+  	    	</paths>
+  	    	<region>
+  	    		<obstacle type="Rectangular" force="1" location="16 16" width="3.5" height="2" angle="0"/>
+  	    	</region>
+ 	    </individuals>  
+ 	    <!--<individuals number="1" diameter="genID=1" time="genID=2" color="10 180 10" initialVelocity="1.5">
+ 	    	<paths>
+ 	    		<path id="4" weight=".2"/>
+ 	    		
+  	    	</paths>
+  	    	<region>
+  	    		<obstacle type="Rectangular" force="1" location="13 12" width="10" height="2" angle="0"/>
+  	    	</region>
+ 	    </individuals>  -->
+  </model>
+</configuration>
+@

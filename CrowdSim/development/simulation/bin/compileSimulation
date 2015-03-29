@@ -1,0 +1,5 @@
+#!/bin/bash
+H=`pwd`/..
+rm -rf $H/classes
+mkdir -p $H/classes
+cd $H && javac -classpath $H/libs/mason11.jar:$CLASSPATH:$H/libs/jmf.jar -sourcepath $H/src -d $H/classes `find $H/src|grep java$`

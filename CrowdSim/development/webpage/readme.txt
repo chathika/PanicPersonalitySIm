@@ -1,0 +1,1 @@
+This is where all HTML and Scripts will be stored for the project!

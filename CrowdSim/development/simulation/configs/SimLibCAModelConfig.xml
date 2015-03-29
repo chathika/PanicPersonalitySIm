@@ -1,0 +1,64 @@
+<?xml version="1.0"?>
+
+<configuration xmlns="http://tempuri.org/config.xsd">
+  <log type="SystemLog" fileName="../logs/sysLog.txt" logLevel="1" consoleOutput="false" fileOutput="true"/>
+  <log type="SimIndDataLogger" fileName="../logs/SimIndDataLogAlan.csv" fileOutput="true"/>
+  <log type="SimLibDataLogger" fileName="../logs/SimLibDataLogAlan.csv" fileOutput="true"/>
+  <world height="45" width="35" scale="18" discretization="100"/>
+  <!--<movie filename="../logs/SimLibMov.mov" frameRate="3"/>-->
+  <terminate time="240300"/>
+  <obstacles>
+    <obstacle type="Rectangular" force="1" location="1 5" width="12.9" height="1" angle="0" displayCenter="true"/>
+	<obstacle type="Rectangular" force="1" location="15.1 5" width="12.9" height="1" angle="0" displayCenter="true"/>
+	<obstacle type="Rectangular" force="1" location="1 6" width="1" height="25" angle="0" displayCenter="true"/>
+	<obstacle type="Rectangular" force="1" location="27 6" width="1" height="25" angle="0" displayCenter="true"/>
+	<obstacle type="Rectangular" force="1" location="1 31" width="12.9" height="1" angle="0" displayCenter="true"/>
+	<obstacle type="Rectangular" force="1" location="15.1 31" width="12.9" height="1" angle="0" displayCenter="true"/>
+
+	<obstacle type="Station" force="1" center="6 10" width="3" height="3" angle="0" displayCenter="true" StationID="0" StationMachines="2"/>
+	<obstacle type="Station" force="1" center="23 10" width="3" height="3" angle="0" displayCenter="true" StationID="1" StationMachines="3"/>
+	<obstacle type="Station" force="1" center="15 19" width="3" height="3" angle="0" displayCenter="true" StationID="2" StationMachines="3"/>
+	<obstacle type="Station" force="1" center="6 27" width="3" height="3" angle="0" displayCenter="true" StationID="3" StationMachines="4"/>
+	<obstacle type="Station" force="1" center="23 27" width="3" height="3" angle="0" displayCenter="true" StationID="4" StationMachines="1"/>
+
+<!--
+	<obstacle type="Rectangular" force="1" location="12 9" width="12" height="3" angle="0" displayCenter="true"/>
+-->
+  </obstacles>
+  <paths>
+  	<path id="0" name="JobType1" >
+  		<waypoint x="15" y="19" radius="0.25"/><!-- Station 3 -->
+		<waypoint x="6" y="10" radius="0.25"/><!-- Station 1 -->
+		<waypoint x="23" y="10" radius="0.25"/><!-- Station 2 -->
+		<waypoint x="23" y="27" radius="0.25"/><!-- Station 5 -->
+		<waypoint x="14.5" y="31.5" radius="0.25"/><!-- Exit -->
+
+  	</path>
+  	<path id="1" name="JobType2" >
+  		<waypoint x="6" y="27" radius="0.25"/><!-- Station 4 -->
+		<waypoint x="6" y="10" radius="0.25"/><!-- Station 1 -->
+		<waypoint x="15" y="19" radius="0.25"/><!-- Station 3 -->
+		<waypoint x="14.5" y="31.5" radius="0.25"/><!-- Exit -->
+
+  	</path>
+  	<path id="2" name="JobType3" >
+  		<waypoint x="15" y="19" radius="0.25"/><!-- Station 3 -->
+		<waypoint x="6" y="10" radius="0.25"/><!-- Station 1 -->
+		<waypoint x="23" y="27" radius="0.25"/><!-- Station 5 -->
+		<waypoint x="23" y="10" radius="0.25"/><!-- Station 2 -->
+		<waypoint x="6" y="27" radius="0.25"/><!-- Station 4 -->
+		<waypoint x="14.5" y="31.5" radius="0.25"/><!-- Exit -->
+  	</path>
+  </paths>
+  <randomGenerators>
+  	<generator id="1" type="normal" mean="0.6" stdDev="0.1"/>
+  	<generator id="2" type="exponentialWithMean" mean="900"/>	
+  </randomGenerators>
+  <model type="cellularautomata.SimLibCAModel">
+  <individuals number="1" time="genID=2" diameter="genID=1" color="190 190 190">
+ 	       	<region>
+	    		<obstacle type="Rectangular" location="14 5" width="2" height="2" angle="0" />
+	    	</region>
+	    </individuals>
+  </model>
+</configuration>

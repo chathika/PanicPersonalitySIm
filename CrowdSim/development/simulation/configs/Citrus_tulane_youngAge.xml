@@ -1,0 +1,153 @@
+<?xml version="1.0"?>
+
+<configuration xmlns="http://tempuri.org/config.xsd">
+  <log type="SystemLog" fileName="../logs/sysLog.txt" logLevel="1" consoleOutput="true" fileOutput="false"/>
+  <log type="DataLogger" fileName="../logs/dataLog.csv" fileOutput="true"/>
+  <world width="17" height="13" scale="32" discretization="100"/>
+  <terminate time="20"/>
+  <movie filename="../logs/" />
+  <obstacles>
+  	<!-- Left Fence-->
+  	<obstacle type="Rectangular" force="1" location="0 7.1" width="4.4" height=".3" angle="347"/>
+	<!-- Left Fence Gate-->
+	<obstacle type="Rectangular" force="1" location="4.2 6.3" width="2.8" height=".3" angle="225"/>
+  	<!-- Right Fence-->
+	<obstacle type="Rectangular" force="1" location="12 4.3" width="7.0" height=".3" angle="347"/>
+  	<!-- Right Fence Gate-->
+	<obstacle type="Rectangular" force="1" location="12 4.5" width="3.13" height=".3" angle="221"/>
+  	<!--turnstile - 1-->
+	<obstacle type="Rectangular" force="1" location="0 7.4" width="2.7048" height="2.1985" angle="347"/>
+  	<!--turnstile - 2-->
+	<obstacle type="Rectangular" force="1" location="13.6 4.1" width="3.5048" height="1.5" angle="347"/>
+  </obstacles>
+  <paths>
+  	<path id="1" name="path1">
+  		<waypoint x="6.0" y="5.5" radius="1"/>
+  		<waypoint x="4.2" y="3.0" radius="1"/>
+  		<waypoint x="0.0" y="2.0" radius="1"/>
+  	</path>
+  	<path id="2" name="path1">
+  		<waypoint x="10.0" y="4.5" radius="1"/>
+  		<waypoint x="7.2" y="3.0" radius="1"/>
+  		<waypoint x="8.0" y="1.0" radius="1"/>
+  	</path>
+  </paths>
+  <randomGenerators>
+  	<generator id="1" type="normal" mean="0.6" stdDev="0.1"/>	
+  </randomGenerators>
+  <model type="HMFVModelWithParams" age="5">
+ 	    <individuals number="6" diameter="genID=1" color="10 180 10" initialVelocity="1.5">
+ 	    	<paths>
+ 	    		<path id="1" weight="1"/>
+ 	    		<path id="2" weight="1"/>
+  	    	</paths>
+  	    	<region>
+  	    		<obstacle type="Rectangular" force="1" location="3.5 5" width="3" height="4" angle="0"/>
+  	    	</region>
+ 	    </individuals>  	
+	    <individuals number="6" diameter="genID=1" color="10 180 10" initialVelocity="1.5">
+ 	    	<paths>
+ 	    		<path id="1" weight="1"/>
+ 	    		<path id="2" weight="1"/>
+  	    	</paths>
+  	    	<region>
+  	    		<obstacle type="Rectangular" force="1" location="5 5" width="4" height="4" angle="0"/>
+  	    	</region>
+ 	    </individuals>
+ 	    <individuals number="4" diameter="genID=1" color="10 180 10" initialVelocity="1.5">
+ 	    	<paths>
+ 	    		<path id="1" weight="1"/>
+ 	    		<path id="2" weight="1"/>
+  	    	</paths>
+  	    	<region>
+  	    		<obstacle type="Rectangular" force="1" location="9 5" width="4" height="4" angle="0"/>
+  	    	</region>
+ 	    </individuals>
+ 	    <individuals number="5" diameter="genID=1" color="10 180 10" initialVelocity="1.5">
+ 	    	<paths>
+ 	    		<path id="1" weight="1"/>
+ 	    		<path id="2" weight="1"/>
+  	    	</paths>
+  	    	<region>
+  	    		<obstacle type="Rectangular" force="1" location="11 5" width="3" height="4" angle="0"/>
+  	    	</region>
+ 	    </individuals>
+ 	    
+ 	    
+ 	    
+		<individuals number="4" diameter="genID=1" color="10 180 10" initialVelocity="1.5">
+ 	    	<paths>
+ 	    		<path id="1" weight="1"/>
+ 	    		<path id="2" weight="1"/>
+  	    	</paths>
+  	    	<region>
+  	    		<obstacle type="Rectangular" force="1" location="1 9" width="4" height="4" angle="0"/>
+  	    	</region>
+ 	    </individuals>  	
+	    <individuals number="3" diameter="genID=1" color="10 180 10" initialVelocity="1.5">
+ 	    	<paths>
+ 	    		<path id="1" weight="1"/>
+ 	    		<path id="2" weight="1"/>
+  	    	</paths>
+  	    	<region>
+  	    		<obstacle type="Rectangular" force="1" location="5 9" width="4" height="4" angle="0"/>
+  	    	</region>
+ 	    </individuals>
+
+		<individuals number="1" time="1" diameter="genID=1" color="10 180 10" initialVelocity="1.5">
+ 	    	<paths>
+ 	    		<path id="1" weight="1"/>
+ 	    		<path id="2" weight="1"/>
+  	    	</paths>
+  	    	<region>
+  	    		<obstacle type="Rectangular" force="1" location="1 9" width="4" height="4" angle="0"/>
+  	    	</region>
+ 	    </individuals>
+ 	    <individuals number="2" time="3" diameter="genID=1" color="10 180 10" initialVelocity="1.5">
+ 	    	<paths>
+ 	    		<path id="1" weight="1"/>
+ 	    		<path id="2" weight="1"/>
+  	    	</paths>
+  	    	<region>
+  	    		<obstacle type="Rectangular" force="1" location="1 9" width="4" height="4" angle="0"/>
+  	    	</region>
+ 	    </individuals>  	
+	    <individuals number="2" time="3" diameter="genID=1" violenceRating="0" color="10 180 10" initialVelocity="1.5">
+ 	    	<paths>
+ 	    		<path id="1" weight="1"/>
+ 	    		<path id="2" weight="1"/>
+  	    	</paths>
+  	    	<region>
+  	    		<obstacle type="Rectangular" force="1" location="5 9" width="4" height="4" angle="0"/>
+  	    	</region>
+ 	    </individuals>
+ 	    <individuals number="1" time="3" diameter="genID=1" violenceRating="0" color="10 180 10" initialVelocity="1.5">
+ 	    	<paths>
+ 	    		<path id="1" weight="1"/>
+ 	    		<path id="2" weight="1"/>
+  	    	</paths>
+  	    	<region>
+  	    		<obstacle type="Rectangular" force="1" location="9 9" width="4" height="4" angle="0"/>
+  	    	</region>
+ 	    </individuals>
+ 	    <individuals number="1" time="3" diameter="genID=1" violenceRating="0" color="10 180 10" initialVelocity="1.5">
+ 	    	<paths>
+ 	    		<path id="1" weight="1"/>
+ 	    		<path id="2" weight="1"/>
+  	    	</paths>
+  	    	<region>
+  	    		<obstacle type="Rectangular" force="1" location="13 9" width="4" height="4" angle="0"/>
+  	    	</region>
+ 	    </individuals>
+ 	    
+ 	    <individuals number="1" time="3" diameter="genID=1" violenceRating="0" color="10 180 10" initialVelocity="1.5">
+ 	    	<paths>
+ 	    		<path id="1" weight="1"/>
+ 	    		<path id="2" weight="1"/>
+  	    	</paths>
+  	    	<region>
+  	    		<obstacle type="Rectangular" force="1" location="11 5" width="3" height="4" angle="0"/>
+  	    	</region>
+ 	    </individuals>
+  </model>
+</configuration>

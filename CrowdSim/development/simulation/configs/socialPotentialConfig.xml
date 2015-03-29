@@ -1,0 +1,45 @@
+<?xml version="1.0"?>
+
+<configuration xmlns="http://tempuri.org/config.xsd">
+  <log type="SystemLog" fileName="../logs/sysLog.txt" logLevel="1" consoleOutput="true" fileOutput="false"/>
+  <log type="DataLogger" fileName="../logs/dataLog.csv" fileOutput="true"/>
+  <world height="30" width="30" scale="18" discretization="100"/>
+  <!--<movie filename="../logs/" />-->
+  <obstacles>
+    <obstacle type="Rectangular" force="1" location="1 1" width="1" height="17" angle="0" displayCenter="true"/>
+	<obstacle type="Rectangular" force="1" location="2 17" width="15" height="1" angle="0" displayCenter="true"/>
+	<obstacle type="Rectangular" force="1" location="2 1" width="15" height="1" angle="0" displayCenter="true"/>
+	<obstacle type="Rectangular" force="1" location="17 1" width="1" height="7.9" angle="0" displayCenter="true"/>
+	<obstacle type="Rectangular" force="1" location="17 10.1" width="1" height="7.9" angle="0" displayCenter="true"/>
+  	<obstacle type="Circular" force="1" center="17 8.9" radius="0.01"  />
+  	<obstacle type="Circular" force="1" center="18 8.9" radius="0.01" />
+  	<obstacle type="Circular" force="1" center="17 10.1" radius="0.01" />
+  	<obstacle type="Circular" force="1" center="18 10.1" radius="0.01"/>
+  	<obstacle type="Circular" force="1" center="14 8" radius="1" displayCenter="true" />
+  </obstacles>
+  <paths>
+  	<path id="1" name="path1">
+  		<waypoint x="18" y="9" radius="0.25"/>
+  		<waypoint x="20" y="9" radius="0.25"/>
+  		<waypoint x="25" y="9" radius="0.25"/>
+  	</path>
+  </paths>
+  <model type="HMFVSocialModel" avoidIndividuals="3" preferredVelocity="1" avoidObstacle="6" attractors="1" randomness="4" momentum="1" timeStep="0.7">
+	    <individuals number="30" diameter="0.5" violenceRating="10" color="200 10 10">
+	    	<paths>
+	    		<path id="1" weight="1"/>
+	    	</paths>
+	    	<region>
+	    		<obstacle type="Rectangular" location="4 4" width="8" height="13" angle="0" />
+	    	</region>
+	    </individuals>
+	    <individuals number="20" diameter="0.5" violenceRating="0" color="210 210 210">
+	    	<paths>
+	    		<path id="1" weight="1"/>
+	    	</paths>
+	    	<region>
+	    		<obstacle type="Rectangular" location="4 4" width="8" height="13" angle="0" />
+	    	</region>
+	    </individuals>
+  </model>
+</configuration>

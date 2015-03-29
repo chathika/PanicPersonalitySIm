@@ -1,0 +1,30 @@
+<?xml version="1.0"?>
+
+<configuration xmlns="http://tempuri.org/config.xsd">
+  <log type="SystemLog" fileName="../logs/sysLog.txt" logLevel="1" consoleOutput="true" fileOutput="false"/>
+  <log type="DataLogger" fileName="../logs/dataLog.csv" fileOutput="true"/>
+  <world height="150" width="150" discretization="100"/>
+  <obstacles>
+    <obstacle type="Rectangular" force="1" location="0 5" width="5" height="100" angle="0" />
+	<obstacle type="Rectangular" force="1" location="5 105" width="100" height="5" angle="0" />
+	<obstacle type="Rectangular" force="1" location="5 0" width="100" height="5" angle="0" />
+	<obstacle type="Rectangular" force="1" location="105 5" width="5" height="40" angle="0" />
+	<obstacle type="Rectangular" force="1" location="105 65" width="5" height="40" angle="0" />
+  	<obstacle type="Circular" force="-2" center="105 55" radius="5"/>
+  </obstacles>
+  <randomGenerators>
+  	<generator id="1" type="normal" mean="0.6" stdDev="0.1"/>	
+  </randomGenerators>
+  <model type="GroupingModel" timeStep="1.2">
+      <individuals number="25" diameter="genID=1" violenceRating="0" color="150 100 50">
+	     <region>
+	        <obstacle type="Rectangular" location="4 4" width="100" height="100" angle="0" />
+	     </region>
+	  </individuals>
+	  <individuals number="25" diameter="genID=1" violenceRating="5" color="150 0 50">
+	     <region>
+	        <obstacle type="Rectangular" location="4 4" width="100" height="100" angle="0" />
+	     </region>
+	  </individuals>
+  </model>
+</configuration>

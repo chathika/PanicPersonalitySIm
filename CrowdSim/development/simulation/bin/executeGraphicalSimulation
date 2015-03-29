@@ -1,0 +1,3 @@
+#!/bin/bash
+H=`pwd`/..
+java -server -cp $H/classes:$H/libs/mason11.jar:$CLASSPATH crowdsimulation.CrowdSimulationWithUI $*

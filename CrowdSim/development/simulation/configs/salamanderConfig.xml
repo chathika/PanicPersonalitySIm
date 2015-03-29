@@ -1,0 +1,80 @@
+<?xml version="1.0"?>
+<!-- 
+This is a sample config file used for the Salamander simulation.
+Note that the PFA, PFB, and PFC settings won't be the default ones that
+are in the comment blocks below.
+-->
+<configuration xmlns="http://tempuri.org/config.xsd">
+  <log type="SystemLog" fileName="../logs/sysLog.txt" logLevel="1" consoleOutput="true" fileOutput="false"/>
+  <log type="DataLogger" fileName="../logs/dataLog.csv" fileOutput="true"/>
+  <world scale="16" height="30" width="30" discretization="100"/>
+  <obstacles>
+    <obstacle type="Rectangular" force="1" location="1 1" width="1" height="17" angle="0" displayCenter="true"/>
+	<obstacle type="Rectangular" force="1" location="2 17" width="26" height="1" angle="0" displayCenter="true"/>
+	<obstacle type="Rectangular" force="1" location="2 1" width="26" height="1" angle="0" displayCenter="true"/>
+	<obstacle type="Rectangular" force="1" location="28 1" width="1" height="17" angle="0" displayCenter="true"/>
+	<obstacle type="Rectangular" force="-1" location="10 10" width="2" height="2" angle="0" displayCenter="true"/>
+  </obstacles>
+  <model type="SalamanderModel" timeStep="0.1">
+		<!-- 
+		SmallSalRegionalAffinity = 10
+		SmallSalViolence = 1
+		SmallSalPFA = -2
+		SmallSalPFB = 1
+		SmallSalPFC = 10
+		SmallSalAreaNeeded = 4
+		SmallSalCoverAttraction = 900000
+		SmallSalCoverMemoryAttraction = 5000
+		SmallSalFoodAttraction = 10
+		SmallSalWaterAttraction = 1
+		SmallSalInfluenceOfOthers = 0
+		SmallSalRandomStrength = 1000
+		SmallSalSpeed = 6 
+		-->
+	    <individuals number="1" image="blackArrow.gif" diameter="0.5" color="180 10 10" coverAttraction="90000" coverMemoryAttraction="5000" influenceOfOthers="1" interactionRadius="5" violenceRating="1" pfA="-2" pfB="1" pfC="10" regionMarker="26" regionalAffinity="10" waterAttraction="1">
+	    	<region>
+	    		<obstacle type="Rectangular" location="3 3" width="20" height="13" angle="0" />
+	    	</region>
+	    </individuals>
+	    <!-- 
+		MediumSalRegionalAffinity = 10
+		MediumSalViolence = 2
+		MediumSalPFA = 5
+		MediumSalPFB = 2
+		MediumSalPFC = 10
+		MediumSalAreaNeeded = 8
+		MediumSalCoverAttraction = 900000
+		MediumSalCoverMemoryAttraction = 5000
+		MediumSalFoodAttraction = 10
+		MediumSalWaterAttraction = 1
+		MediumSalInfluenceOfOthers = 0
+		MediumSalRandomStrength = 1000
+		MediumSalSpeed = 6
+		-->
+	    <individuals number="2" image="redArrow.gif" diameter="0.6" color="10 180 10" coverAttraction="90000" coverMemoryAttraction="20" influenceOfOthers="2" interactionRadius="5" violenceRating="2" pfA="5" pfB="2" pfC="10" regionMarker="13" regionalAffinity="10" waterAttraction="1">
+	    	<region>
+	    		<obstacle type="Rectangular" location="3 3" width="20" height="13" angle="0" />
+	    	</region>
+	    </individuals>
+	    <!--
+	    LargeSalRegionalAffinity = 3
+		LargeSalViolence = 10
+		LargeSalPFA = 2
+		LargeSalPFB = 1
+		LargeSalPFC = 10
+		LargeSalAreaNeeded = 8
+		LargeSalCoverAttraction = 3
+		LargeSalCoverMemoryAttraction = 3
+		LargeSalFoodAttraction = 0.01
+		LargeSalWaterAttraction = 10
+		LargeSalInfluenceOfOthers = 0
+		LargeSalRandomStrength = 0.03
+		LargeSalSpeed = 3
+		-->
+	    <individuals number="1" diameter="0.7" color="10 10 180" coverAttraction="3" coverMemoryAttraction="2" influenceOfOthers="3" interactionRadius="5" violenceRating="10" pfA="-2" pfB="1" pfC="-10" regionMarker="5" regionalAffinity="3" waterAttraction="10">
+	    	<region>
+	    		<obstacle type="Rectangular" location="3 3" width="20" height="13" angle="0" />
+	    	</region>
+	    </individuals>
+  </model>
+</configuration>

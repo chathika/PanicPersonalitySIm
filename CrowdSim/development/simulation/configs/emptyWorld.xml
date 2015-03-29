@@ -1,0 +1,34 @@
+<?xml version="1.0"?>
+
+<configuration xmlns="http://tempuri.org/config.xsd">
+  <log type="SystemLogger" fileName="../logs/appLog.csv" logLevel="1" consoleOutput="true" fileOutput="true"/>
+  <world height="30" width="30" scale="18" discretization="100"/>
+  <terminate time="10"/>
+  <obstacles>
+  </obstacles>
+  <paths>
+  	<path id="1" name="path1">
+  		<waypoint x="18" y="9" radius="0.25"/>
+  		<waypoint x="20" y="9" radius="0.25"/>
+  		<waypoint x="25" y="9" radius="0.25"/>
+  	</path>
+  </paths>
+ <randomGenerators>
+  	<generator id="1" type="normal" mean="0.6" stdDev="0.1"/>	
+  </randomGenerators>
+  <model type="LKFModel2">
+	    <individuals number="0" diameter="genID=1" color="180 180 180">
+	    	<paths>
+	    		<path id="1" weight="1"/>
+	    	
+	    	
+	    	
+	    	</paths>
+	    	<region>
+	    		<obstacle type="Rectangular" location="4 4" width="8" height="13" angle="0" />
+	    	</region>
+	    </individuals>	    
+  </model>
+</configuration>
+
+

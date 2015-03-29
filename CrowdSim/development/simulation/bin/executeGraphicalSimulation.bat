@@ -1,0 +1,1 @@
+java -Xmx512M -Xmx512M -Xmn512M -XX:+UseParallelGC -XX:ParallelGCThreads=20 -classpath %CLASSPATH%;%MASON_HOME%;%CROWDSIM_HOME%\classes -Djomp.threads=100 crowdsimulation.CrowdSimulationWithUI %1

@@ -1,0 +1,133 @@
+<?xml version="1.0"?>
+<configuration xmlns="http://tempuri.org/config.xsd">
+    <!-- The length units used here are centimeters and the time unit is in hours.  -->
+  <log type="SystemLog" fileName="../logs/sysLog.txt" logLevel="1" consoleOutput="true" fileOutput="false"/>
+  <log type="SalamanderLogger" fileName="../logs/salamanderData.csv"/>
+  <log type="SalamanderIndividualLogger" fileName="../logs/salamanderIndivData"/>
+  <world width="69" height="670" discretization="10"/>
+  <terminate time="50"/>
+  <obstacles>
+<!-- Slate -->
+    <obstacle type="Rectangular" force="-1" center="35 8" width="30" height="15" angle="0" />
+<!-- Logs -->
+	<obstacle type="Rectangular" force="-1" center="23 45" width="7" height="20" angle="0" ofInterest="true"/>
+	<obstacle type="Rectangular" force="-1" center="23 166" width="7" height="20" angle="0" ofInterest="true"/>
+	<obstacle type="Rectangular" force="-1" center="23 441" width="7" height="20" angle="0" ofInterest="true"/>
+	<obstacle type="Rectangular" force="-1" center="23 561" width="7" height="20" angle="0" ofInterest="true"/>
+	<obstacle type="Rectangular" force="-1" center="42 107" width="7" height="20" angle="0" ofInterest="true"/>
+	<obstacle type="Rectangular" force="-1" center="42 229" width="7" height="20" angle="0" ofInterest="true"/>
+	<obstacle type="Rectangular" force="-1" center="42 502" width="7" height="20" angle="0" ofInterest="true"/>
+	<obstacle type="Rectangular" force="-1" center="42 622" width="7" height="20" angle="0" ofInterest="true"/>
+<!-- Rocks -->
+	<obstacle type="Circular" force="-1" center="42 45" radius="7" angle="0" ofInterest="true"/>
+	<obstacle type="Circular" force="-1" center="42 141" radius="7" angle="0" ofInterest="true"/>
+	<obstacle type="Circular" force="-1" center="42 263" radius="7" angle="0" ofInterest="true"/>
+	<obstacle type="Circular" force="-1" center="42 536" radius="7" angle="0" ofInterest="true"/>
+	<obstacle type="Circular" force="-1" center="42 656" radius="7" angle="0" ofInterest="true"/>
+	<obstacle type="Circular" force="-1" center="23 73" radius="7" angle="0" ofInterest="true"/>
+	<obstacle type="Circular" force="-1" center="23 193" radius="7" angle="0" ofInterest="true"/>
+	<obstacle type="Circular" force="-1" center="23 468" radius="7" angle="0" ofInterest="true"/>
+	<obstacle type="Circular" force="-1" center="23 588" radius="7" angle="0" ofInterest="true"/>
+<!-- End of obstacles -->
+  </obstacles>
+  <randomGenerators>
+  	<generator id="1" type="normal" mean="0.6" stdDev="0.1"/>	
+  </randomGenerators>
+  <model type="SalamanderModel" timeStep="0.0002">
+        <individuals type="salamander"
+  				 	 number="4" 
+				 	 color="180 10 10" 
+	    		 	 coverAttraction="50"
+	    		 	 coverMemoryAttraction="5"
+	    		 	 diameter="7"
+                     ejectionForce="100"
+	    		 	 foodAttraction="20"
+	    		 	 foodSourceAttraction="10"
+	    		 	 interactionRadius="20"
+                     memorySize="3"
+	    		 	 pfA="-50"
+	    		 	 pfB="-10"
+	    		 	 pfC="-10"
+	    		 	 randomStrength="10"
+                     regionalAffinity="10"
+	    		 	 regionMarker="640"
+	    		 	 regionSize="30"
+	    		 	 speed="8000"
+	    		 	 size="1"
+	    		 	 waterAttraction="00">
+	    	<region>
+	    		<obstacle type="Rectangular" location="0 0" width="69" height="670" angle="0" />
+	    	</region>
+	    </individuals>
+	    <individuals type="salamander"
+	    			 number="2"
+	    			 color="10 180 10" 
+	    			 coverAttraction="50"
+	    			 coverMemoryAttraction="10"
+	    			 diameter="12"
+                     ejectionForce="100"
+	    			 foodAttraction="100"
+	    			 foodSourceAttraction="10"
+	    			 interactionRadius="15"
+                     memorySize="3"
+	    			 pfA="+20"
+	    			 pfB="-10"
+	    			 pfC="-20"
+	    			 randomStrength="10"
+	    			 regionalAffinity="10"
+                     regionMarker="30"
+	    			 regionSize="50"
+                     size="5"
+	    			 speed="8000"
+	    			 waterAttraction="00">
+	    	<region>
+	    		<obstacle type="Rectangular" location="0 0" width="69" height="670" angle="0" />
+	    	</region>
+	    </individuals>
+	    <individuals type="salamander"
+	    			 number="1" 
+	    			 color="10 10 190"
+	    			 coverAttraction="30"
+	    			 coverMemoryAttraction="5"
+	    			 diameter="16"
+                     ejectionForce="10"
+	    			 foodAttraction="100"
+	    			 foodSourceAttraction="20"
+	    			 interactionRadius="10"
+                     memorySize="4"
+	    			 pfA="20"
+	    			 pfB="40"
+	    			 pfC="-10"
+	    			 randomStrength="10"
+                     regionalAffinity="30"
+	    			 regionMarker="20"
+	    			 regionSize="20"
+                     size="10"
+	    			 speed="4000"
+	    			 waterAttraction="10">
+	    	<region>
+	    		<obstacle type="Rectangular" location="0 0" width="69" height="670" angle="0" />
+	    	</region>
+	    </individuals>
+  </model>
+  <model type="ObstacleModel" timeStep="0.0002">
+	<individuals number="2"
+				 color="255 255 10" 
+				 type="Insect"
+	    		 diameter="2"
+	    		 time="0.2">
+	    	<region>
+	    		<obstacle type="Rectangular" location="0 0" width="69" height="200" angle="0" />
+	    	</region>
+	</individuals>
+	<individuals number="2"
+				 type="Insect"
+				 color="255 255 10" 
+	    		 diameter="2"
+	    		 time="0.2">
+	    	<region>
+	    		<obstacle type="Rectangular" location="0 470" width="69" height="200" angle="0" />
+	    	</region>
+	</individuals>
+  </model>
+</configuration>

@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<workspace>
+	<settings>
+		<label>CrowdSimulation</label>
+		<id>8</id>
+		<version>0</version>
+	</settings>
+	<users>
+		<user>
+			<path>CrowdSimulation.jcu</path>
+		</user>
+	</users>
+	<projects>
+		<project>
+			<path>CrowdSimulation.jcp</path>
+		</project>
+	</projects>
+</workspace>

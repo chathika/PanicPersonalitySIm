@@ -1,0 +1,219 @@
+#!/usr/bin/perl
+# Takes 4 parameters: <config path>, <logRoot>, runs, threads. The second is optional and defaults to ../logs/
+
+
+use IO::File;
+use XML::DOM;
+#use Thread;
+#use Thread::Semaphore;
+use threads;
+use threads::shared;
+#use XML::DOM;
+#use XML::XPath;
+
+my $InFileName="SimLibCAModelConfig.xml";
+my $fileHandler="fileHandle";
+my $directoryBaseName="run";
+my $directoryName;
+my $directoryCreated=0;
+my $numberOfDirs=0;
+my $messageInFile;
+my $defaultOutFileName="../configs/currentconfig.xml";
+
+my $numberOfRuns=30;
+if($#ARGV >= 2) {
+	$numberOfRuns = $ARGV[2];
+}
+my $startRun=0;
+my $currentRun=0;
+my $set=0;
+my $numberOfSets=1;
+
+my $paramName="violenceRating";
+my $paramMin="0";
+my $paramStep="1";
+my $paramMax="0";
+my $paramVal;
+my @configPaths = ();
+my $threadCount = 2;
+if($#ARGV >= 3) {
+	$threadCount = $ARGV[3];
+}
+my $lastAJ :shared;
+$lastAJ = -1;
+#my @key = (-1);
+
+my $logRoot = "../logs";
+
+#my $s = new Thread::Semaphore;
+
+my $configPath="../configs/".$InFileName;
+if($#ARGV >= 0) {
+	$configPath = $ARGV[0];
+}
+if($#ARGV >= 1) {
+	$logRoot = $ARGV[1];
+}
+print( "Processing ".$configPath."\n");
+print( "Output saved to ".$logRoot."\n");
+
+sub runSerial() {
+	for($set; $set < $numberOfSets; $set=$set+1)
+	{
+		system( "mkdir ../logs/set\_$set");
+
+		for ($currentRun=$startRun; $currentRun<= $startRun+$numberOfRuns;) 
+		{
+			$directoryCreated = 0;
+
+			for ( $paramVal=$paramMin; $paramVal<= $paramMax; $paramVal=$paramVal+$paramStep)
+			{
+				print( "Currently working on run $currentRun! \n" );
+
+				while( $directoryCreated == 0 )
+				{
+					$directoryName = $directoryBaseName.$currentRun;
+					$directoryCreated = 1;
+					$currentRun++;
+
+					mkdir( "../logs/$directoryName\_$paramVal", 0755 ) || {$directoryCreated=0};
+				}
+
+				system( "rm -rf $defaultOutFileName" );
+				system( "touch $defaultOutFileName" );
+				sysopen( $fileHandler, $defaultOutFileName, O_RDWR);
+
+				$configFile = readWholeFile( "../configs/$InFileName" );
+				$configFile =~ s/#1#/$paramVal/g;
+
+				print { $fileHandler } $configFile ;
+
+				system( "./executeSimulation $defaultOutFileName");
+
+				system( "mv $defaultOutFileName ../logs/$directoryName\_$paramVal" );
+				system( "mv ../logs/*.dat ../logs/$directoryName\_$paramVal" );
+				system( "mv ../logs/*.csv ../logs/$directoryName\_$paramVal" );
+				system( "mv ../logs/*.log ../logs/$directoryName\_$paramVal" );
+				system( "mv ../logs/*.sys ../logs/$directoryName\_$paramVal" );
+				system( "mv -f ../logs/*.qt  ../logs/$directoryName\_$paramVal");
+				system( "mv ../logs/$directoryName\_* ../logs/set\_$set/");
+
+			}
+		}
+	}
+}
+
+sub savexml {
+	local($file);
+	$file = ">".@_[1];
+	open(XMLFILE, $file);
+	print XMLFILE @_[0]->toString;
+	close(XMLFILE);
+}
+
+sub runParallel() {
+	
+	local($start,$stop,@threads);
+
+	# make all the runs
+	my $configsTempFolder = "/tmp/configs";
+	system("mkdir -p $configsTempFolder");
+	my @runfoldernames = ();
+	
+
+	for($set; $set < $numberOfSets; $set=$set+1)
+	{
+		for ($currentRun=$startRun; $currentRun< $startRun+$numberOfRuns;$currentRun+=1) 
+		{
+			push(@runfoldernames,"set_".$set."/run_".$currentRun);
+		}
+	}
+	#print @runfoldernames;
+
+	# read the configuration file as an XML file.
+	my $parser = XML::DOM::Parser->new();
+
+	my $doc = $parser->parsefile($configPath);
+	$configurationNode = ($doc->getElementsByTagName('configuration'))[0];
+	$logFolderNode = $doc->createElement('logFolder');
+	$configurationNode->insertBefore($logFolderNode, $configurationNode->getFirstChild());
+
+	# for each run, add an output log folder.
+	foreach $foldername (@runfoldernames) {
+		$folder = $configsTempFolder."/".$foldername;
+		system("mkdir -p ".$folder);
+		$tempConfigFilePath = $folder."/config.xml";
+		push(@configPaths,$tempConfigFilePath);
+
+		$textNode = $logFolderNode->appendChild($doc->createTextNode($logRoot."/".$foldername));
+		savexml($doc,$tempConfigFilePath);
+		$logFolderNode->removeChild($textNode);
+	}
+	@threads = ();
+	#$sph = new Thread::Semaphore;
+	@k = (-1);
+	for($i = 0; $i < $threadCount; $i++) {
+		$start = $i * ($#configPaths+1) / $threadCount;
+		$stop = ($i+1) * ($#configPaths+1) / $threadCount;
+		$thr = threads->create('threadlogic', $i, $#configPaths+1);
+		push(@threads, $thr);
+	}
+
+	foreach $thr (@threads) {
+		$thr->join;
+	}
+#	foreach $config (@configPaths) {
+#		system( "./executeSimulation $config");
+#	}
+
+	system("rm -rf $configsTempFolder");
+}
+
+sub threadlogic {
+	$id = $_[0];
+	$size = $_[1];
+
+
+	$done = 0;
+	while($done == 0) {
+		$job = -1;
+		{
+		    lock($lastAJ);
+			if($lastAJ < $size - 1) {
+				$lastAJ += 1;
+				$job = $lastAJ;
+#				print $id."-+<".$lastAssignedJob.">\n";
+			}
+			else {$done = 1;}
+#			print $id."--<".@key[0].">\n";
+		}
+		if($done == 0 && $job >= 0) {
+			print "[$id] Starting ".$configPaths[$job]."\n";
+#			system("pwd; which java");
+#			system( "./executeSimulation $configPaths[$job]");
+#			system( "rm -rf ~/logs/*");
+#			system( "mkdir -p ~/logs");
+#			system( "./executeSimulation $configPaths[$job] &> ~/logs/job_$job.log");
+			system( "./executeSimulation $configPaths[$job] &> /dev/null");
+			print "[$id] Finished ".$configPaths[$job]."\n";
+			#system("sleep 1");
+		}
+	}
+}
+
+sub readWholeFile( $ )
+{
+   my( $fileName ) = @_;
+   open( file, "< $fileName" );
+   my $fileString = "";
+   while( my $line = <file> )
+   {
+      $fileString = $fileString.$line;
+   }
+   close(file);
+   return $fileString;
+}
+
+
+runParallel()
+#runSerial()

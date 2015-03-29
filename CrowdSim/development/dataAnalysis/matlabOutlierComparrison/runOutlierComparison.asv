@@ -1,0 +1,245 @@
+% This runs the Outlier Analysis on a two sets of simulation data.
+% The  process is as follows:
+%    1. Sample the directories to generate a historical dataset.
+%    2. Sample the directories to generate a comparative dataset.
+%    3. Normalize the two datasets by the data from the historical dataset.
+%    4. Calculate the Principal Components of the datasets.
+%        NOTE: The PCA's of the comparative group are generated using the
+%        eigenvectors of the historical set.
+%    5. Calculate the score of the Historical Dataset using the eigenvalues
+%        from the historical dataset
+%    6. Calculate the score of the Comparative Dataset using the eigenvalues
+%        from the historical dataset
+%    7. Generate simplicial depth for both datasets using the data from the
+%        historical set as the base for measuring the simplicial depth.
+%    8. Calculate the rank of the Comparative simplicial depth as compared
+%        to the historical dataset simplicial depths.
+%    9. Next calculate ranks for the last few Principal components.
+%     9a. Flip the Scores of the Historical Dataset so the last column
+%        becomes the first column.
+%     9b. Flip the Scores of the Comparative Dataset so the last column
+%        becomes the first column.
+%     9c. Generate simplicial depth for both flipped datasets using the data from the
+%        flipped historical set as the base for measuring the simplicial depth.
+%     9d. Calculate the rank of the flipped Comparative simplicial depth as compared
+%        to the flipped historical dataset simplicial depths.
+%
+%   @param baseDir The directory to store the output in.
+%   @param hsdDir The directory to get the historical dataset from.
+%   @param compDir The directory to get the comparative dataset from.
+%   @param numberOfComponents The number of components to calculate the
+%               ranks with.
+%   @param numberOfLastComponents The number of components to calculate for
+%               the last principal components.
+%   @param storeDataInFiles Should the data be stored in a file.
+%
+%   @return eigenvectors The eigenvectors gathered from the historical
+%               dataset and used to calculate the scores.
+%   @return eigenvalues The eigenvalues gathered from the hitorical
+%               dataset.
+%   @return mean The mean of the historical dataset.
+%   @return stdDev The std deviation fo the historical datastet.
+%   @return hsScores The scores of the historical dataset.
+%   @return compScores The scores of the comparative dataset.
+%   @return hsSD The simplicial depths of the historical data scores.
+%   @return compSD The simplicial depths of the comparative data scores.
+%   @return count The counts of the comparative dataset as compared to the
+%               historical dataset.
+%   @return rank The ranks of the comparative dataset as compared to the
+%               historical dataset.
+%   @return lastHDSD The Simplicial depths of the historical dataset using
+%               the last principal components.
+%   @return lastCOMPSD The Simplicial depths of the comparative dataset using
+%               the last principal components.
+%   @return countLast The count of the comparative dataset as compared to the
+%               historical dataset using the last principal components.
+%   @return rankLast The rank of the comparative dataset as compared to the
+%               historical dataset using the last principal components.
+%   @return hsData The historical dataset which was used for all of the
+%               calcualations.
+%   @return compData The comparative dataset which was used for all of the
+%               calculations.
+function [eigenvectors,eigenvalues,mean,stdDev,hsScores,compScores,hsSD,compSD,count,rank,lastHDSD,lastCOMPSD,countLast,rankLast,hsData,compData]=runOutlierComparison(baseDir,hsdDir,compDir,numberOfComponents,numberOfLastComponents,storeDataInFiles)
+
+global testcase;
+
+sampleTimes = [7.5];
+duration = 1;
+columns = [4, 5, 6, 7, 8, 9, 10, 11, 13,15];
+fileName = 'compareData.csv';
+
+%This reads in the test data.
+%These two lines should only be uncommented if you are running the test
+%case to make sure hte code is opperating properly.
+if testcase > 0
+    hsData = csvread( strcat('testCase',num2str( testcase ),'/testCase_hsData.csv'), 1, 0);
+    compData = csvread( strcat('testCase',num2str( testcase ),'/testCase_compData.csv'), 1, 0);
+else
+    hsDataTemp = sampleRun( strcat( baseDir, hsdDir ), 'run', fileName, sampleTimes, duration );
+    compDataTemp = sampleRun( strcat( baseDir, compDir ), 'run', fileName, sampleTimes, duration );
+    
+    %trim the data
+        [x,numberOfColumns] = size( columns );
+    for i=1:numberOfColumns
+        hsData(:,i) = hsDataTemp(:,columns(i));
+        compData(:,i) = compDataTemp(:,columns(i));
+    end;
+end;
+
+%Normalize the datasets
+%This takes both data sets and normalizes them based on the historical
+%dataset.
+[hsNormalized,compNormalized,mean,stdDev]=normalizeDataSets(hsData,compData);
+
+%Use PCA analysis to find eigenvector and eigenvalues of the correlation
+%matrix.
+[eigenvalues,eigenvectors,proportion,cummulative]=calculatePCAs(hsNormalized);
+
+if testcase == 1
+    % ???This is a correction to fix a sign difference between the two data sets. 
+    % ???The reason for this needs to be found.
+    eigenvectors(:,3:6)=eigenvectors(:,3:6).*-1;
+    eigenvectors(:,9)=eigenvectors(:,9).*-1;
+end;
+
+%Next use the eigenvectors to transform the data to the new basis vectors.
+[hsScores]=computeScores(hsNormalized,eigenvectors);
+[compScores]=computeScores(compNormalized,eigenvectors);
+
+%Then generate the simplicial depth for a certain number of PCAs.
+[hsSD,compSD]=generateSDs(hsScores,compScores,numberOfComponents);
+
+%Rank the data of the compSD to hsSD
+[count,rank]=calculateRank(hsSD,compSD);
+
+%repeat SD and rank calculations for last pcs
+hsScoresFliped=flip( hsScores );
+compScoresFliped=flip( compScores );
+
+%Then generate the simplicial depth for a certain number of PCAs.
+[lastHDSD,lastCOMPSD]=generateSDs(hsScoresFliped,compScoresFliped,numberOfLastComponents);
+
+%Rank the data of the compSD to hsSD
+[countLast,rankLast]=calculateRank(lastHDSD,lastCOMPSD);
+
+%Generate plots for each of the principal components used.
+for i=1:1:numberOfComponents
+    figure(i);
+    plot(rank(:,i),'-*');
+    title( strcat( 'Rank of first  ' , num2str(i), '  PCS' ) );
+end;
+
+%Generate plots for each of the last principal components used.
+for j=1:1:numberOfLastComponents
+    figure(i+j);
+    plot(rankLast(:,i),'-*');
+    title( strcat( 'Rank of last  ' , num2str(i), '  PCS' ) );
+end;
+
+%Place the collected data in a given directory
+if storeDataInFiles == 1
+    mkdir(strcat(baseDir,'compData/'));
+    csvwrite(strcat(baseDir,'compData/hsData.csv'),hsData);
+    csvwrite(strcat(baseDir,'compData/compData.csv'),compData);
+    csvwrite(strcat(baseDir,'compData/eigenVecotrs.csv'),eigenvectors);
+    csvwrite(strcat(baseDir,'compData/eigenVals.csv'),eigenvalues);
+    csvwrite(strcat(baseDir,'compData/hsScores.csv'),hsScores);
+    csvwrite(strcat(baseDir,'compData/compScores.csv'),compScores);
+    csvwrite(strcat(baseDir,'compData/hsSDs.csv'),hsSD);
+    csvwrite(strcat(baseDir,'compData/compSDs.csv'),compSD);
+    csvwrite(strcat(baseDir,'compData/count.csv'),count);
+    csvwrite(strcat(baseDir,'compData/ranks.csv'),rank);
+    csvwrite(strcat(baseDir,'compData/hsLastSDs.csv'),lastHDSD);
+    csvwrite(strcat(baseDir,'compData/compLastSDs.csv'),lastCOMPSD);
+    csvwrite(strcat(baseDir,'compData/countLast.csv'),countLast);
+    csvwrite(strcat(baseDir,'compData/rankLast.csv'),rankLast);
+end;
+
+
+%This is the test case which will allow easy testing of this routine.
+%Here we calculate the differences of all collected data and to test for
+%differences with the original fruit data.s
+if testcase > 0
+    test_hsNorm=csvread( strcat('testCase',num2str( testcase ),'/testCase_hsZScore.csv'),1,0);
+    test_compNorm=csvread( strcat('testCase',num2str( testcase ),'/testCase_compZScore.csv'),1,0);
+    test_mean=csvread(strcat('testCase',num2str( testcase ),'/testCase_hsMean.csv'),1,0);
+    test_stdDev=csvread(strcat('testCase',num2str( testcase ),'/testCase_hsStd.csv'),1,0);
+    test_eigenvec=csvread(strcat('testCase',num2str( testcase ),'/testCase_eigenvec.csv'),1,0);
+    test_eigenval=csvread(strcat('testCase',num2str( testcase ),'/testCase_eigenval.csv'),1,0);
+    test_proportion=csvread(strcat('testCase',num2str( testcase ),'/testCase_proportion.csv'),1,0);
+    test_cummulative=csvread(strcat('testCase',num2str( testcase ),'/testCase_cummulative.csv'),1,0);
+    test_hsScore=csvread(strcat('testCase',num2str( testcase ),'/testCase_hsScore.csv'),1,0);
+    test_compScore=csvread(strcat('testCase',num2str( testcase ),'/testCase_compScore.csv'),1,0);
+    test_hsSD=csvread(strcat('testCase',num2str( testcase ),'/testCase_hsSD.csv'),1,0);
+    test_compSD=csvread(strcat('testCase',num2str( testcase ),'/testCase_compSD.csv'),1,0);
+    test_rank =csvread(strcat('testCase',num2str( testcase ),'/testCase_rankOfPCs.csv'),1,0);
+    test_count = csvread(strcat('testCase',num2str( testcase ),'/testCase_countOnPCs.csv'),1,0);
+
+    hsNormDiff = hsNormalized-test_hsNorm;
+    max_hsNormDiff = max(max(abs(hsNormDiff)));
+    disp(strcat('The Maximum Difference of the Norms of the Historical Data was :', num2str( max_hsNormDiff ) ) );
+    
+    compNormDiff = compNormalized-test_compNorm;
+    max_compNormDiff = max(max(abs(compNormDiff)));
+    disp(strcat('The Maximum Difference of the Norms of the Comparative Data was :', num2str( max_compNormDiff ) ) );
+    meanDiff = mean-test_mean;
+    max_meanDiff = max(max(abs(meanDiff)));
+    disp(strcat('The Maximum Difference of the mean was :', num2str( max_meanDiff ) ) );
+    stdDevDiff = stdDev - test_stdDev;
+    max_stdDevDiff = max(max(abs(stdDevDiff)));
+    disp(strcat('The Maximum Difference of the standard deviation was :', num2str( max_stdDevDiff ) ) );
+
+    eigenvecDiff = abs(eigenvectors-test_eigenvec);
+    max_eigenvecDiff = max(max( eigenvecDiff ));
+    disp(strcat('The Maximum Difference of the eigenvectors was :', num2str( max_eigenvecDiff ) ) );
+    test_eigenval = test_eigenval';
+    eigenvalDiff = abs(eigenvalues-test_eigenval);
+    max_eigenvalDiff = max(max(eigenvalDiff));
+    disp(strcat('The Maximum Difference of the eigenvalues was :', num2str( max_eigenvalDiff ) ) );
+    
+    test_proportion = test_proportion';
+    proportionDiff = max(max(abs(proportion-test_proportion)));
+    disp(strcat('The Maximum Difference of the proportions was :', num2str( proportionDiff ) ) );
+    test_cummulative = test_cummulative';
+    cummulativeDiff = max(max(abs(cummulative-test_cummulative)));
+    disp(strcat('The Maximum Difference of the cummulatives was :', num2str( cummulativeDiff ) ) );
+    
+    hsScoreDiff = abs(hsScores-test_hsScore);
+    max_hsScoreDiff = max(max(hsScoreDiff));
+    disp(strcat('The Maximum Difference of the Historical Scores was :', num2str( max_hsScoreDiff ) ) );
+    compScoreDiff = abs(compScores-test_compScore);
+    max_compScoreDiff = max(max(compScoreDiff));
+    disp(strcat('The Maximum Difference of the Comparative Scores was :', num2str( max_compScoreDiff ) ) );
+    
+    hsSDDiff = abs(hsSD-test_hsSD(:,1:numberOfComponents));
+    max_hsSDDiff = max(max( hsSDDiff ));
+    disp(strcat('The Maximum Difference of the Historical Simplicial Depths was :', num2str( max_hsSDDiff ) ) );
+    compSDDiff = abs(compSD-test_compSD(:,1:numberOfComponents));
+    max_compSDDiff = max(max( compSDDiff ));
+    disp(strcat('The Maximum Difference of the Comparative Simplicial Depths was :', num2str( max_compSDDiff ) ) );
+    
+    countDiff = max(max(abs(count-test_count(:,1:numberOfComponents))));
+    max_countDiff = max(max( countDiff ));
+    disp(strcat('The Maximum Difference of the counts was :', num2str( max_countDiff ) ) );
+    rankDiff = abs(rank-test_rank(:,1:numberOfComponents));
+    max_rankDiff = max(max( rankDiff ));
+    disp(strcat('The Maximum Difference of the ranks was :', num2str( max_rankDiff ) ) );
+    
+    %Place the collected data in a given directory
+    if storeDataInFiles == 1
+        csvwrite(strcat(baseDir,'compData/comp_means.csv'),meanDiff);
+        csvwrite(strcat(baseDir,'compData/comp_stdDev.csv'),stdDevDiff);
+        csvwrite(strcat(baseDir,'compData/comp_eigenVecotrs.csv'),eigenvecDiff);
+        csvwrite(strcat(baseDir,'compData/comp_eigenVals.csv'),eigenvalDiff);
+        csvwrite(strcat(baseDir,'compData/comp_proportion.csv'),proportionDiff);
+        csvwrite(strcat(baseDir,'compData/comp_cummulative.csv'),cummulativeDiff);
+        csvwrite(strcat(baseDir,'compData/comp_hsScores.csv'),hsScoreDiff);
+        csvwrite(strcat(baseDir,'compData/comp_compScores.csv'),compScoreDiff);
+        csvwrite(strcat(baseDir,'compData/comp_hsSDs.csv'),hsSDDiff);
+        csvwrite(strcat(baseDir,'compData/comp_compSDs.csv'),compSDDiff);
+        csvwrite(strcat(baseDir,'compData/comp_counts.csv'),countDiff);
+        csvwrite(strcat(baseDir,'compData/comp_ranks.csv'),rankDiff);
+    end;
+
+end
+    

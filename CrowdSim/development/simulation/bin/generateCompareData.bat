@@ -1,0 +1,1 @@
+java -classpath %CLASSPATH%;%MASON_HOME%;%CROWDSIM_HOME%\classes crowdsimulation.dataanalysis.SimCompareDataAnalyzer %1 %2 %3 %4

@@ -1,0 +1,18 @@
+%RGB = imread('.\data\groupImage_0.0_0.bmp');
+%RGB = imread('.\data\groupImage_0.0_1.bmp');
+%RGB = imread('.\data\primaryGroupImage.bmp');
+%RGB = imread('.\data\test4.bmp');
+RGB = imread('.\data\primaryGroupImage_328.bmp');
+
+invMat=ones(size(RGB));
+RGB=xor(RGB,invMat);
+
+[blackPixelCount,whitePixelCount,wholesPixelCount] = getPixelCounts(RGB);
+
+% pixelcount,black/blackPlusWholes,wholes/blackPlusWholes,
+
+[x,y]=size(wholesPixelCount);
+totalCount = blackPixelCount;
+for i=1:1:y
+    totalCount = totalCount + wholesPixelCount(i);
+end;

@@ -1,0 +1,30 @@
+#!/usr/bin/perl
+use IO::File;
+
+my $configFileName="currentconfig.xml";
+my $dataFileName="dataLog.csv";
+my $outputFileName="compareData.csv";
+my $directory="../logs"
+
+my $numberOfRuns=60;
+my $startRun=0;
+my $currentRun;
+my $set=0;
+my $numberOfSets=1;
+
+my $paramMin=0;
+my $paramStep="1";
+my $paramMax=0;
+my $paramVal;
+
+for($set; $set< $numberOfSets; $set=$set+1)
+{
+   for ($currentRun=$startRun; $currentRun< $startRun+$numberOfRuns; $currentRun++) 
+   {
+
+      for ( $paramVal=$paramMin; $paramVal<=$paramMax; $paramVal=$paramVal+$paramStep)
+      {
+         system( "java -cp \$CROWDSIM_HOME/classes:\$MASON_HOME:\$CLASSPATH crowdsimulation.dataanalysis.SimCompareDataAnalyzer .$directory/set_$set/run$currentRun\_$paramVal/ $configFileName $dataFileName $outputFileName")
+      }
+   }
+}

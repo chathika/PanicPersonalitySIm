@@ -1,0 +1,75 @@
+<?xml version="1.0"?>
+
+<configuration xmlns="http://tempuri.org/config.xsd">
+  <log type="SystemLog" fileName="../logs/sysLog.txt" logLevel="1" consoleOutput="true" fileOutput="false"/>
+  <log type="DataLogger" fileName="../logs/dataLog.csv" fileOutput="true"/>
+  <world width="154" height="110" scale="14" discretization="100"/>
+  <obstacles>
+  	<!-- Left Fence-->
+  	<obstacle type="Rectangular" force="1" location="0 40" width="36" height=".75" angle="0"/>
+  	<!-- Left Fence Gate-->
+	<obstacle type="Rectangular" force="1" location="35.25 40" width="37.3" height=".75" angle="90"/>
+  	<!-- Right Fence-->
+	<obstacle type="Rectangular" force="1" location="110.6 40" width="43.4" height=".75" angle="0"/>
+  	<!-- Right Fence Gate-->
+	<obstacle type="Rectangular" force="1" location="110.6 40" width="37.3" height=".75" angle="90"/>
+  	<!--turnstile - 1
+	<obstacle type="Rectangular" force="1" location="18.667 55" width="3.048" height="6.985" angle="0"/>-->
+  	<!--turnstile - 2-->
+	<obstacle type="Rectangular" force="1" location="0.24 55" width="3.048" height="6.985" angle="0"/>
+  	<!--turnstile - 3-->
+	<obstacle type="Rectangular" force="1" location="11.107 55" width="3.048" height="6.985" angle="0"/>
+  	<!--turnstile - 4-->
+	<obstacle type="Rectangular" force="1" location="23.68 55" width="3.048" height="6.985" angle="0"/>
+  	<!--turnstile bar 1
+	<obstacle type="Rectangular" force="1" location="19.691 55" width="8.89" height="1" angle="90"/>-->
+	<!--turnstile bar 2-->
+	<obstacle type="Rectangular" force="1" location="1.264 55" width="8.89" height="1" angle="90"/>
+  	<!--turnstile bar 3-->
+	<obstacle type="Rectangular" force="1" location="12.1225 55" width="8.89" height="1" angle="90"/>
+  	<!--turnstile bar crossbar-->
+	<obstacle type="Rectangular" force="1" location="1.264 46.11" width="10.8585" height="1" angle="0"/>
+  	<!--turnstile bar 4-->
+	<obstacle type="Rectangular" force="1" location="24.6955 55" width="8.89" height="1" angle="90"/>
+  	<!--turnstile - 5-->
+	<obstacle type="Rectangular" force="1" location="111.79 55" width="3.048" height="6.985" angle="0"/>
+  	<!--turnstile - 6-->
+	<obstacle type="Rectangular" force="1" location="124.36 55" width="3.048" height="6.985" angle="0"/>
+  	<!--turnstile - 7-->
+	<obstacle type="Rectangular" force="1" location="135.23 55" width="3.048" height="6.985" angle="0"/>
+  	<!--turnstile - 8-->
+	<obstacle type="Rectangular" force="1" location="147.81 55" width="3.048" height="6.985" angle="0"/>
+  	<!--turnstile bar 5-->
+	<obstacle type="Rectangular" force="1" location="112.817 55" width="8.89" height="1" angle="90"/>
+	<!--turnstile bar 6-->
+	<obstacle type="Rectangular" force="1" location="125.39 55" width="8.89" height="1" angle="90"/>
+  	<!--turnstile bar 7-->
+	<obstacle type="Rectangular" force="1" location="136.2493 55" width="8.89" height="1" angle="90"/>
+  	<!--turnstile bar crossbar 6 to 7-->
+	<obstacle type="Rectangular" force="1" location="125.39 46.11" width="10.8585" height="1" angle="0"/>
+  	<!--turnstile bar 8-->
+	<obstacle type="Rectangular" force="1" location="148.8223 55" width="8.89" height="1" angle="90"/>
+  	<!--check
+	<obstacle type="Rectangular" force="1" location="5 70" width="160" height="20" angle="0"/>-->
+  </obstacles>
+  <paths>
+  	<path id="1" name="path1">
+  		<waypoint x="124.3" y="40" radius="5"/>
+  		<waypoint x="124.3" y="30" radius="5"/>
+  		<waypoint x="124.3" y="20" radius="5"/>
+  	</path>
+  </paths>
+  <randomGenerators>
+  	<generator id="1" type="normal" mean="0.6" stdDev="0.05"/>	
+  </randomGenerators>
+ <!--<model type="hmfvModel">
+	    <individuals number="30" diameter="genID=1" violenceRating="0" color="10 180 10">
+ 	    	<paths>
+ 	    		<path id="1" weight="1"/>
+  	    	</paths>
+  	    	<region>
+  	    		<obstacle type="Rectangular" force="1" location="5 70" width="160" height="20" angle="0"/>
+  	    	</region>
+ 	    </individuals>
+  </model>-->
+</configuration>

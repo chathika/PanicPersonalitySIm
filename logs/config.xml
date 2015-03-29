@@ -1,0 +1,70 @@
+<?xml version="1.0"?>
+
+<configuration xmlns="http://tempuri.org/config.xsd">
+  <log type="SystemLog" fileName="../logs/sysLog.txt" logLevel="1" consoleOutput="true" fileOutput="false"/>
+  <log type="DataLogger" fileName="../logs/dataLog.csv" fileOutput="true"/>
+  <world height="130" width="90" scale="18" discretization="100"/>
+  <obstacles>
+  	<!--Inside Walls-->
+  	<!--Front Exits-->
+  	<obstacle type="Rectangular" force="1" location="20.5525 15" width="2.717" height=".5" angle="0"/>
+    <obstacle type="Rectangular" force="1" location="41.5075 15" width="6.985" height=".5" angle="0"/>
+	<obstacle type="Rectangular" force="1" location="66.7805 15" width="2.667" height=".5" angle="0"/>
+  	<obstacle type="Rectangular" force="1" location="23.2695 12" width=".5" height="3.5" angle="0"/>
+    <obstacle type="Rectangular" force="1" location="41.5075 12" width=".5" height="3.5" angle="0"/>
+	<obstacle type="Rectangular" force="1" location="48.4925 12" width=".5" height="3.5" angle="0"/>
+  	<obstacle type="Rectangular" force="1" location="66.7805 12" width=".5" height="3.5" angle="0"/>
+  	<!--Right Side-->
+  	<obstacle type="Rectangular" force="1" location="69.4475 15" width=".5" height="16.098" angle="0"/>
+  	<obstacle type="Rectangular" force="1" location="69.7975 30.748" width="12.93" height=".5" angle="315"/>
+  	<obstacle type="Rectangular" force="1" location="78.5915 39.892" width=".5" height="6.731" angle="0"/>
+  	<obstacle type="Rectangular" force="1" location="78.5915 60.593" width=".5" height="27.686" angle="0"/>
+  	<obstacle type="Rectangular" force="1" location="79.0915 88.279" width="12.93" height="0.5" angle="225"/>
+  	<obstacle type="Rectangular" force="1" location="69.4475 97.073" width=".5" height="18.122" angle="0"/>
+ 	<obstacle type="Rectangular" force="1" location="78.5915 46.623" width="3.5" height=".5" angle="0"/>
+  	<obstacle type="Rectangular" force="1" location="78.5915 60.593" width="3.5" height=".5" angle="0"/>
+ 	<!--Church Exits-->
+ 	<obstacle type="Rectangular" force="1" location="20.5525 114.695" width="2.717" height=".5" angle="0"/>
+ 	<obstacle type="Rectangular" force="1" location="41.5075 114.695" width="6.985" height=".5" angle="0"/>
+	<obstacle type="Rectangular" force="1" location="66.7805 114.695" width="2.667" height=".5" angle="0"/>	
+ 	<obstacle type="Rectangular" force="1" location="23.2695 114.695" width=".5" height="3.5" angle="0"/>
+    <obstacle type="Rectangular" force="1" location="41.5075 114.695" width=".5" height="3.5" angle="0"/>
+	<obstacle type="Rectangular" force="1" location="48.4925 114.695" width=".5" height="3.5" angle="0"/>
+  	<obstacle type="Rectangular" force="1" location="66.7805 114.695" width=".5" height="3.5" angle="0"/>
+ 	 <!--Left Side-->
+  	<obstacle type="Rectangular" force="1" location="20.5525 15" width=".5" height="15.748" angle="0"/>
+  	<obstacle type="Rectangular" force="1" location="21.0525 30.748" width="12.93" height=".5" angle="225"/>
+  	<obstacle type="Rectangular" force="1" location="11.4085 39.542" width=".5" height="28.798" angle="0"/>
+  	<obstacle type="Rectangular" force="1" location="11.4085 81.675" width=".5" height="6.944" angle="0"/>
+  	<obstacle type="Rectangular" force="1" location="11.9085 88.279" width="12.93" height=".5" angle="315"/>
+  	<obstacle type="Rectangular" force="1" location="20.5525 97.423" width=".5" height="17.272" angle="0"/>
+ 	<obstacle type="Rectangular" force="1" location="8.4085 68.34" width="3.5" height=".5" angle="0"/>
+  	<obstacle type="Rectangular" force="1" location="8.4085 81.675" width="3.5" height=".5" angle="0"/>
+ 	 <!--End Inside Walls-->
+ 	 <!--Outside Walls-->
+  	<!--Front Exits-->
+  	<obstacle type="Rectangular" force="1" location="17.5525 12" width="5.717" height=".5" angle="0"/>
+    <obstacle type="Rectangular" force="1" location="41.5075 12" width="6.985" height=".5" angle="0"/>
+	<obstacle type="Rectangular" force="1" location="66.7805 12" width="5.667" height=".5" angle="0"/>
+  	<!--Right Side-->
+  	<obstacle type="Rectangular" force="1" location="72.4475 12" width=".5" height="17.598" angle="0"/>
+  	<obstacle type="Rectangular" force="1" location="72.7975 29.248" width="12.93" height=".5" angle="315"/>
+  	<obstacle type="Rectangular" force="1" location="81.5915 38.392" width=".5" height="8.231" angle="0"/>
+  	<obstacle type="Rectangular" force="1" location="81.5915 60.593" width=".5" height="29.186" angle="0"/>
+  	<obstacle type="Rectangular" force="1" location="82.0915 89.7279" width="12.93" height="0.5" angle="225"/>
+  	<obstacle type="Rectangular" force="1" location="72.4475 98.573" width=".5" height="19.622" angle="0"/>
+ 	<!--Church Exits-->
+ 	<obstacle type="Rectangular" force="1" location="17.5525 117.695" width="5.717" height=".5" angle="0"/>
+ 	<obstacle type="Rectangular" force="1" location="41.5075 117.695" width="6.985" height=".5" angle="0"/>
+	<obstacle type="Rectangular" force="1" location="66.7805 117.695" width="5.667" height=".5" angle="0"/>	
+ 	 <!--Left Side-->
+  	<obstacle type="Rectangular" force="1" location="17.5525 12" width=".5" height="17.248" angle="0"/>
+  	<obstacle type="Rectangular" force="1" location="18.0525 29.248" width="12.93" height=".5" angle="225"/>
+  	<obstacle type="Rectangular" force="1" location="8.4085 38.042" width=".5" height="30.298" angle="0"/>
+  	<obstacle type="Rectangular" force="1" location="8.4085 81.675" width=".5" height="8.444" angle="0"/>
+  	<obstacle type="Rectangular" force="1" location="8.9085 89.779" width="12.93" height=".5" angle="315"/>
+  	<obstacle type="Rectangular" force="1" location="17.5525 98.923" width=".5" height="18.772" angle="0"/>
+ 	 <!--Outside Walls-->	
+  </obstacles>
+ 
+</configuration>

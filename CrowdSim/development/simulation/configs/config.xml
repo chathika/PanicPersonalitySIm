@@ -1,0 +1,48 @@
+<?xml version="1.0"?>
+
+<configuration xmlns="http://tempuri.org/config.xsd">
+  <log type="SystemLog" fileName="../logs/sysLog.txt" logLevel="1" consoleOutput="true" fileOutput="false"/>
+  <log type="DataLogger" fileName="../logs/dataLog.csv" fileOutput="true"/>
+  <world height="150" width="150" discretization="100"/>
+  <obstacles>
+    <obstacle type="Rectangular" force="1" location="15 75" width="10" height="10" angle="0" />
+    <obstacle type="Rectangular" force="-1" location="105 75" width="10" height="10" angle="0" />
+    <obstacle type="Circular" force="-1" center="80 60" radius="10"/>
+  </obstacles>
+  <paths>
+  	<path id="1" name="path1">
+  		<waypoint x="5" y="60" radius="1"/>
+  		<waypoint x="40" y="60" radius="1"/>
+  		<waypoint x="60" y="90" radius="1"/>
+  		<waypoint x="80" y="90" radius="3"/>
+  		<waypoint x="100" y="70" radius="1"/>
+  		<waypoint x="90" y="40" radius="1"/>
+  		<waypoint x="90" y="20" radius="1"/>
+  	</path>
+  	<path id="2" name="path2">
+  		<waypoint x="5" y="5" radius="1"/>
+  		<waypoint x="140" y="5" radius="1"/>
+  		<waypoint x="140" y="120" radius="1"/>
+  		<waypoint x="5" y="120" radius="1"/>
+  	</path>
+  </paths>
+  <model type="HMFVModel">
+	    <individuals number="50" diameter="0.6" violenceRating="10" color="100 100 50">
+	    	<paths>
+	    		<path id="1" weight="0.5"/>
+	    		<path id="2" weight="0.5"/>
+	    	</paths>
+	    	<region>
+	        	<obstacle type="Rectangular" location="4 4" width="80" height="80" angle="0" />
+	     	</region>
+	    </individuals>
+	    <individuals number="50" diameter="0.6" violenceRating="0" color="10 10 150">
+	    	<paths>
+	    		<path id="1" weight="0.5"/>
+	    	</paths>
+	    	<region>
+	        	<obstacle type="Rectangular" location="4 4" width="80" height="80" angle="0" />
+	     	</region>
+	    </individuals>
+  </model>
+</configuration>

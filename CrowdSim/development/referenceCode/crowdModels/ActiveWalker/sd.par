@@ -1,0 +1,351 @@
+
+CONTENTS
+========
+
+	usage notes
+	decription of the model
+	integer, double, string parameters
+
+===================================================================
+
+NOTES
+=====
+
+Global parameters: 1 = interactive, 0 = non-interactive.
+If the program stops unexpectedly, you may receive a message on 'stderr'.
+
+Please, do NOT change the first three columns (the 'hashmark', 
+the '0' / '1' bit and the variable name). 
+Please, do NOT include any other 'hashmarks' in this file.
+
+Note: the program does not check for _all_ possible parameter discrepancies,
+      only for the most obvious ones.
+
+
+==================================================================
+
+
+DESCRIPTION OF THE MODEL
+========================
+
+
+	Equations of pedestrian motion
+	------------------------------
+	(EMType = type of the particles' eq. of motion)
+
+
+		if EMType=1 (1st order diff. eq.):
+                preferred direction = 
+			direction of the sum of 
+			( unit vector of the dir. of target object,
+			  grass force 
+                        ) 
+	   
+		new velocity = 
+			
+			( V0 * cos (preferred direction) 
+                          V0 * sin (preferred direction), 
+                        )
+		      + 
+			pair interactions (vector)
+                      +
+                        noise (vector)
+
+
+			grass force = C_V * nabla V 
+			(pushing particles towards the most comfortable 
+			 neighbouring places), 
+			   where V(r_i) = K * integral( dr^2 G(r) exp(|r-r_i|/Sigma) )
+	                                      [goes for |r-r_i| < WR]
+			   and K is chosen to fulfill 
+	  		   1.0 = integral( dr^2 exp(|r-r_i|/Sigma) )		
+	                         [goes for |r-r_i| < WR] 
+
+            		pair interactions: ( F = - nabla U )
+		 	  derived as forces from these potentials: 
+			  U(r) = A1 * (r - hc)^(-A2), if r <= R 
+	               	  0                         , if r > R
+               		  and hc = <sum of the two particles' radii>
+
+
+                        noise = Gaussian white noise
+                          direction: chosen randomly from (0,2*PI(
+                          apmlitude: mean GaussMean,
+                                   variance GaussTheta,
+                                   cutoff GaussCutMult*sqrt(GaussTheta)
+
+	                NOTE1: grass forces are normalized:
+	        		the component of the grass force
+			      	parallel to the direction of the
+				target is not allowed 
+				to drop below -GrCut 
+				(positive direction defined by the
+				direction of the target)
+
+	                NOTE2: if any two particles are closer to each
+				other than H2*<sum of radii> 
+				= H2*0.5*(D[i]+D[j]),
+				then the grass force for both of them
+				is set to zero 
+
+
+	      if EMType=2 :  second order diff. equations 
+	 	(not implemented yet)
+
+
+	in both cases, checking velocities:
+		if abs(vnew) > Vmax, abs(vnew) = Vmax
+		( ie. vnew = Vmax*vnew/abs(vnew) )
+	
+
+	each external force is
+	substituted by    force*0.5*[ (C_Back+C_Front) + (C_Back-C_Front)*cos(a) ]
+	where a = angle( desired direction, force )
+
+
+
+
+
+	Equations for the evolution of "grass"
+	--------------------------------------
+
+	G(r,t) = comfort of walking
+                 G is high, if the plants are weak
+
+	dG(r,t)/dt =   I * (1.0-G(r,t)/G_max) * sum_a{ Dirac_d(r-r_a(t)) }
+	             + (<G>-G)/T_G + eta 
+
+        i.e. G(r,t+dt)-G(r,t) =   
+	       I * (1.0-G(r,t)/G_max) * sum_a{ Dirac_d(r-r_a(t)) } * dt
+	     + (<G>-G)/T_G*dt + eta*sqrt(dt)
+
+		where <G> is the mean G value of neighbouring fields	
+	        and eta is a white noise evenly distributed in (0,B_eta)
+		G_min/G_max minimal/maximal comfort of walking
+                T_G: time constant of grass growth
+
+	1st term of rhs (particles => grass):
+ 	  Grass dies (feet,hoofs):
+ 	  At every time step, for each particle, the "Grass value" 
+	  (ie. the comfort of walking on that field) increases near the center of 
+	  the particle 
+	  -- within a radius of 0.5*SiF 
+	     by ( I / area of circle) * (last time step) * (1.0-<G>/G_max), 
+	   	where <G> is the mean Grass value within that circle  
+		and G_max is the maximum allowed grass value  
+		SiF = size of feet
+
+	2nd term of rhs (grass => grass):
+	  a) deterministic growth of grass (comfort of walking decreases)
+             ( the "(<G>-G)/T_G" term ) 
+	  b) stochastic erosion
+             ( the "eta" term )
+
+
+
+INTEGER PARAMETERS
+==================
+
+# 1 EMType	1	
+
+
+
+	Drawing & Saving
+	----------------
+
+	 	   DrawMode  object(s)	size
+     	      		0     arrow   length = PicMag * ObjMag * velocity 
+        	    	1     circle  diameter = PicMag * ObjMag * velocity
+	                2     circle  diameter = PicMag * 
+                                             ( hard core + ObjMag * velocity )
+		        3     disk    diameter = PicMag * hard core
+		        4     circle  diameter = PicMag * hard core
+		        5     disk    diameter = PicMag * hard core
+	                  AND circle  diameter = PicMag * interaction radius
+                        6     TEST
+
+
+# 1 DrawMode	3  
+# 1 DrawCNFreq	0	> 0 means: frequency of drawing in cycle numbers 
+                        = 0 means: frequency is given in real time units
+	                           by DrawRTFreq
+# 1 SaveCNFreq  0	-> similarly to DrawCNFreq/DrawRTFreq 
+
+# 0 Margin	0 	margin for drawing
+# 0 InFW	0  	info field width/height
+# 0 InFH	0
+# 0 XLineHeight	25
+# 0 GrFH	0 	height of graph field
+
+# 1 Sleep	0	additional time to wait after every X11 image
+			displayed (in seconds)
+
+
+	eps images
+	----------
+
+# 1 EpsDataFile 0	yes=1,no=0
+# 1 EpsXSize	400
+# 1 EpsYSize	400
+# 1 EpsMargin	40
+# 1 EpsSleep	0	additional time to wait after every eps data file
+			written to disk (in seconds)
+
+
+
+	Other parameters
+	-----------------
+
+# 0 RandomSeed  9001   random seed
+# 1 MaxCycleNum 100000000 maximum number of updates to be computed
+# 0 Nmax        200    maximum number of particles
+
+
+
+
+
+
+DOUBLE PARAMETERS
+=================
+
+
+	Geometrical data
+	----------------
+
+# 0 FieldXSize	30.0	length/width of field used 
+# 0 FieldYSize	30.0	
+# 0 GG 		0.2 	"grass grid" size, 
+
+# 0 DMean	0.75	particle diameters are chosen from
+# 0 DPlusMinus  0.15   [DMean - DPlusMinus, DMean + DPlusMinus] 
+ 			with a uniform distribution
+
+
+	Model parameters and constants
+	------------------------------	
+
+# 1 Tau		1.0	time constant
+			(used only when EMType=2) 
+# 1 V0		20.0	desired magnitude of velocity 
+# 1 Vmax	40.0	maximum magnitude of velocity
+
+# 1 B_eta	0.0 	
+# 1 T_G		50.0 
+# 0 G_min	0.0
+# 0 G_max	5.0
+
+# 0 SiF		0.75	size of feet
+# 1 I		10.0
+# 1 C_V 	1.0
+# 0 Sigma	10.0
+# 0 WR 		10.0
+# 1 GrCut	0.5	GrCut > 0.0 and < 1.0
+
+# 0 R		2.0
+# 1 A1		0.001
+# 1 A2		1.0
+
+# 1 C_Back 	1.0	-> C_Back/C_Front, see: Equations of motion
+# 1 C_Front	1.0        (only one of these two constants is a free parameter,
+	                    eg. with C_Back and the potentials given, C_Front doesn't 
+			    give new cases)
+
+
+
+	Noise
+	----- 
+
+# 0 GaussMean	0.0
+# 1 GaussTheta	100.0
+# 0 GaussCutMult 3.0 	cutoff multiplier
+
+
+
+	Drawing & Saving
+	----------------	
+
+# 1 SaveRTFreq  0.05    -> see: SaveCNFreq 
+# 1 DrawRTFreq	0.05	-> see: DrawCNFreq
+# 1 ObjMag	0.002	
+# 0 PicMag	20.0
+
+
+
+	Other parameters
+	----------------
+
+# 1 MaxRealTime 1001.0 
+			maximum RealTime the simulation 
+			should be run for
+
+# 1 DeltaT	0.01	default time step (decreased, if neceassary)
+# 1 H		1.01
+
+	H = homogeneity 
+            when initializing, the minimum
+	    particle-p. distance is: H * <sum of the two particles' radii>
+
+# 1 H2		1.5	see NOTE2 above
+
+# 1 C_Euler	50.0 	"Euler accuracy factor" 
+			no pair force is allowed to increase by more
+			than C_Euler during an update	
+
+# 1 C_NS	0.9 	constant of numerical stability, must be < 1.0
+			(used for the Euler updates) 
+
+
+
+
+STRING PARAMETERS
+=================
+
+	Colors
+	------
+	(available colors can be listed with the shell command 'showrgb')
+	PLEASE, do NOT use any inter-word white spaces,
+	eg. use  'LightSlateBlue'  instead of   'light slate blue'  .
+
+# 1 BgCol	black
+# 1 InfoCol	wheat
+
+# 0 XFontName 	10x20	name of fonts for writing info
+
+# 0 OFN 	sd.dat 	output file name
+# 0 LOFN	sd.ldat	long data
+# 0 MFN 	sd.msg	other messages  
+
+
+
+
+PARAMETERS FROM STDIN 
+=====================
+
+	Grass colors
+	------------
+	
+	for the list of available colors, use the shell command 'showrgb'
+	PLEASE, do not use any inter-word white spaces,
+	eg. use 'LightSlateBlue' instead of 'light slate blue'
+
+
+	Points
+	------
+
+	NP: number of points
+
+	PX[I], PY[I]: coordinates of point i
+	PR[i]: radius of particle i's circle
+	PCol[i]: color for particles moving towards point i 
+	                   the disk of point i
+
+	NF: number of fluxes
+	F_Int[i]: intensity of flux i
+	F_Int_delta[i]: changes in the intensity of flux i
+	NPF[i]: number of points included in flux i ( NPF[i] >= 2 )
+	F[i][j]:  jth point on the route defined by flux i
+		( j = 0...NPF[i]-1 ) 	
+        F_Int[i]: intensity of flux i 
+		  (number of particles / time unit)
+
+
