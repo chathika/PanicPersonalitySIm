@@ -1,22 +1,21 @@
+extensions [array]
 turtles-own [
   crowdmates         ;; agentset of nearby turtles
-  nearest-neighbor   ;; closest one of our crowdmates
-  threshold1
-  threshold2
-  panic?
-  rational&guidance?
+  ;;nearest-neighbor   ;; closest one of our crowdmates
+  tolerance level;;Psychological resilience
+  panicEnergy
+  guidanceEmission
   irrational?
+  OCEAN
 ]
 
 
 globals [ N  ]
 
- 
-
 to setup
   clear-all
   crt 100
-    [ set color green - 2 + random 7  ;; random shades look nice
+    [ set color green - 2 ;;+ random 7  ;; random shades look nice
       set size 1.5  ;; easier to see
       set shape "person"
       setxy random-xcor random-ycor ]
@@ -26,19 +25,22 @@ to setup
   let k  100            
   ask turtles
   [
-  set threshold1 random 1000
-  set threshold2 random 1000
-  set rational&guidance? random 2
-  set irrational? random 2
-  if rational&guidance? = 1
-  [ set color blue
-    set k k - threshold1
+    set OCEAN array:from-list n-values 5 [ 0 ] 
+    foreach [0 1 2 3 4] [ array:set OCEAN ? (random-float 1)] 
+    calcResilience
+      
+  ;;set threshold1 random 1000
+  ;;set rational&guidance? random 2
+  ;;set irrational? random 2
+  ;;if rational&guidance? = 1
+  ;;[ set color blue
+    ;;set k k - threshold1
     
-    ]
-  if irrational? = 1
-  [ set color red
-    set k k + threshold1 
-    ]
+   ;;]
+  ;;if irrational? = 1
+  ;;[ set color red
+    ;;set k k + threshold1 
+    ;;]
   ]
   reset-ticks
   
@@ -56,6 +58,9 @@ to go
   tick
 end
 
+to calcResilience ;; uses turtles OCEAN to find their Resilience
+  set tolerance ( 0.68 * ( array:item OCEAN 0 ) + 0.26 * ( array:item OCEAN 1 ) + 0.14 * ( array:item OCEAN 3 ) +  -0.10 * ( array:item OCEAN 4 )) 
+end
 to crowd  ;; turtle procedure
   find-crowdmates
   if any? crowdmates
@@ -69,9 +74,6 @@ end
 to find-nearest-neighbor ;; turtle procedure
   ;set nearest-neighbor min-one-of crowdmates [distance myself]
 end
-
-
-
 @#$#@#$#@
 GRAPHICS-WINDOW
 210
