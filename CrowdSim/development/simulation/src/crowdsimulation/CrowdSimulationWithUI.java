@@ -59,7 +59,7 @@ public class CrowdSimulationWithUI extends GUIState
     	{
     		configFile = args[0];
     	}
-
+System.out.println(configFile);
         CrowdSimulationWithUI mav = new CrowdSimulationWithUI( configFile );
         Console c = new Console( mav );
         c.setVisible( true );

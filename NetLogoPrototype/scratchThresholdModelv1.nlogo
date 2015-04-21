@@ -5,8 +5,9 @@ turtles-own [
   tolerance level;;Psychological resilience
   panicEnergy
   guidanceEmission
-  irrational?
+  irrational
   OCEAN
+  perception
 ]
 
 
@@ -14,24 +15,20 @@ globals [ N  ]
 
 to setup
   clear-all
-  crt 100
-    [ set color green - 2 ;;+ random 7  ;; random shades look nice
-      set size 1.5  ;; easier to see
-      set shape "person"
-      setxy random-xcor random-ycor ]
-    
-              ; random set of thetas for each patche
-             
-  let k  100            
-  ask turtles
-  [
+  crt 10 [ 
+    set color green - 2 ;;+ random 7  ;; random shades look nice
+    set size 1.5  ;; easier to see
+    set shape "person"
+    setxy random-xcor random-ycor 
+   ]
+  ask turtles [
+    set panicEnergy 0
+    set irrational FALSE
+    set perception  0.5
     set OCEAN array:from-list n-values 5 [ 0 ] 
     foreach [0 1 2 3 4] [ array:set OCEAN ? (random-float 1)] 
     calcResilience
-      
-  ;;set threshold1 random 1000
-  ;;set rational&guidance? random 2
-  ;;set irrational? random 2
+    set heading 45
   ;;if rational&guidance? = 1
   ;;[ set color blue
     ;;set k k - threshold1
@@ -42,44 +39,54 @@ to setup
     ;;set k k + threshold1 
     ;;]
   ]
+  ask turtle 1 [
+    set irrational TRUE
+  ]
+  ask turtle 2 [
+    set irrational TRUE
+  ]
+  ask turtles [
+    if irrational = TRUE [
+      set color red
+    ]
+  ]
   reset-ticks
-  
 end
 
 
 to go
-  ask turtles [ crowd ]
-  ;; the following line is used to make the turtles
-  ;; animate more smoothly.
-  repeat 5 [ ask turtles [ fd 0.2 ] display ]
+  ;;ask turtles [ crowd ]
+  ask turtles [ determineIrrationality ]
+  ask turtles [
+    if irrational = TRUE [
+      set color red
+      repeat 4 [   fd 0.2  display ]
+    ]
+  ]
+  repeat 1 [   fd 0.2  display ]
   ;; for greater efficiency, at the expense of smooth
   ;; animation, substitute the following line instead:
-  ; ask turtles [ fd 1 ]
+  ;;ask turtles [ fd 1 ]
   tick
 end
 
 to calcResilience ;; uses turtles OCEAN to find their Resilience
-  set tolerance ( 0.68 * ( array:item OCEAN 0 ) + 0.26 * ( array:item OCEAN 1 ) + 0.14 * ( array:item OCEAN 3 ) +  -0.10 * ( array:item OCEAN 4 )) 
-end
-to crowd  ;; turtle procedure
-  find-crowdmates
-  if any? crowdmates
-    [ find-nearest-neighbor
-       ]
-end
-to find-crowdmates  ;; turtle procedure
- set crowdmates other turtles in-radius 3
+  set tolerance ( 0.68 * ( array:item OCEAN 0 ) + 0.26 * ( array:item OCEAN 1 ) + 0.14 * ( array:item OCEAN 3 ) +  -0.10 * ( array:item OCEAN 4 )) ;; from lit
 end
 
-to find-nearest-neighbor ;; turtle procedure
-  ;set nearest-neighbor min-one-of crowdmates [distance myself]
+to determineIrrationality 
+  let closest other turtles in-radius 2
+  set panicEnergy (count closest with [ irrational = TRUE] * perception)
+  if panicEnergy > tolerance [
+    set irrational  TRUE
+  ]
 end
 @#$#@#$#@
 GRAPHICS-WINDOW
-210
-10
-649
-470
+211
+12
+650
+472
 16
 16
 13.0
