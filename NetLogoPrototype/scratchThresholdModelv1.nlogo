@@ -71,7 +71,21 @@ to go
 end
 
 to calcResilience ;; uses turtles OCEAN to find their Resilience
+<<<<<<< HEAD
   set tolerance ( 0.68 * ( array:item OCEAN 0 ) + 0.26 * ( array:item OCEAN 1 ) + 0.14 * ( array:item OCEAN 3 ) +  -0.10 * ( array:item OCEAN 4 )) ;; from lit
+=======
+  set tolerance ( 0.68 * ( array:item OCEAN 0 ) + 0.26 * ( array:item OCEAN 1 ) + 0.14 * ( array:item OCEAN 3 ) +  -0.10 * ( array:item OCEAN 4 )) 
+end
+
+to crowd  ;; turtle procedure
+  find-crowdmates
+  if any? crowdmates
+    [ find-nearest-neighbor
+       ]
+end
+to find-crowdmates  ;; turtle procedure
+ set crowdmates other turtles in-radius 3
+>>>>>>> origin/master
 end
 
 to determineIrrationality 
@@ -80,6 +94,20 @@ to determineIrrationality
   if panicEnergy > tolerance [
     set irrational  TRUE
   ]
+end
+
+
+;; I think we can do this way too taking 8 neighbors of a turtle.Each turtle will have 8 nearest neighbors.In this way all turtles will be connected I guess
+to crowd1
+  ask turtles
+    [
+    create-links-with turtles-on neighbors
+      [
+      set color red
+      set thickness 0.2
+      ]
+    ]
+  
 end
 @#$#@#$#@
 GRAPHICS-WINDOW
